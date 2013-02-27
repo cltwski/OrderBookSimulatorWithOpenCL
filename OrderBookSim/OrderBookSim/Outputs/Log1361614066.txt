@@ -1,0 +1,5 @@
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+51--INFO	Enqueued order: Price: 0.00, Volume: 543, Type: SELL, Market Order: 1, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 51, OrderNumber: 0

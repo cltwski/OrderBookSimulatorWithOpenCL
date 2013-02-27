@@ -1,0 +1,45 @@
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+60--INFO	Enqueued order: Price: 2147483647.00, Volume: 702, Type: BUY, Market Order: 1, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 60, OrderNumber: 0
+90--INFO	Enqueued order: Price: 2147483647.00, Volume: 219, Type: BUY, Market Order: 1, Participant: 1, Stock:[ID: 0, Symbol: GOOG], Time: 90, OrderNumber: 1
+120--INFO	Enqueued order: Price: 2147483647.00, Volume: 139, Type: BUY, Market Order: 1, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 120, OrderNumber: 2
+180--INFO	Enqueued order: Price: 2147483647.00, Volume: 392, Type: BUY, Market Order: 1, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 180, OrderNumber: 3
+180--INFO	Enqueued order: Price: 0.00, Volume: 273, Type: SELL, Market Order: 1, Participant: 1, Stock:[ID: 0, Symbol: GOOG], Time: 180, OrderNumber: 4
+182--INFO	Last Price Set:100.00
+182--INFO	Notified Traders of trade182---Trade ID: 0, Price: 100.00, Volume: 273 between ID:[0] and ID:[1]
+240--INFO	Enqueued order: Price: 2147483647.00, Volume: 127, Type: BUY, Market Order: 1, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 240, OrderNumber: 5
+270--INFO	Enqueued order: Price: 2147483647.00, Volume: 795, Type: BUY, Market Order: 1, Participant: 1, Stock:[ID: 0, Symbol: GOOG], Time: 270, OrderNumber: 6
+300--INFO	Enqueued order: Price: 0.00, Volume: 503, Type: SELL, Market Order: 1, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 300, OrderNumber: 7
+301--INFO	Last Price Set:100.00
+301--INFO	Notified Traders of trade301---Trade ID: 1, Price: 100.00, Volume: 219 between ID:[1] and ID:[0]
+301--INFO	Last Price Set:100.00
+301--INFO	Notified Traders of trade301---Trade ID: 2, Price: 100.00, Volume: 284 between ID:[1] and ID:[0]
+325--INFO	Enqueued order: Price: 0.00, Volume: 1817, Type: SELL, Market Order: 1, Participant: 3, Stock:[ID: 0, Symbol: GOOG], Time: 325, OrderNumber: 8
+326--INFO	Last Price Set:100.00
+326--INFO	Notified Traders of trade326---Trade ID: 3, Price: 100.00, Volume: 702 between ID:[0] and ID:[3]
+326--INFO	Last Price Set:100.00
+326--INFO	Notified Traders of trade326---Trade ID: 4, Price: 100.00, Volume: 139 between ID:[0] and ID:[3]
+326--INFO	Last Price Set:100.00
+326--INFO	Notified Traders of trade326---Trade ID: 5, Price: 100.00, Volume: 392 between ID:[0] and ID:[3]
+326--INFO	Last Price Set:100.00
+326--INFO	Notified Traders of trade326---Trade ID: 6, Price: 100.00, Volume: 127 between ID:[0] and ID:[3]
+326--INFO	Last Price Set:100.00
+326--INFO	Notified Traders of trade326---Trade ID: 7, Price: 100.00, Volume: 457 between ID:[1] and ID:[3]
+360--INFO	Enqueued order: Price: 2147483647.00, Volume: 990, Type: BUY, Market Order: 1, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 360, OrderNumber: 9
+360--INFO	Enqueued order: Price: 2147483647.00, Volume: 739, Type: BUY, Market Order: 1, Participant: 1, Stock:[ID: 0, Symbol: GOOG], Time: 360, OrderNumber: 10
+420--INFO	Enqueued order: Price: 100.05, Volume: 51, Type: SELL, Market Order: 0, Participant: 0, Stock:[ID: 0, Symbol: GOOG], Time: 420, OrderNumber: 11
+421--INFO	Last Price Set:100.05
+421--INFO	Notified Traders of trade421---Trade ID: 8, Price: 100.05, Volume: 51 between ID:[1] and ID:[0]
+450--INFO	Enqueued order: Price: 0.00, Volume: 548, Type: SELL, Market Order: 1, Participant: 1, Stock:[ID: 0, Symbol: GOOG], Time: 450, OrderNumber: 12
+451--INFO	Last Price Set:100.05
+451--INFO	Notified Traders of trade451---Trade ID: 9, Price: 100.05, Volume: 548 between ID:[0] and ID:[1]
+451--INFO	Enqueued order: Price: 0.00, Volume: 2490, Type: SELL, Market Order: 1, Participant: 2, Stock:[ID: 0, Symbol: GOOG], Time: 451, OrderNumber: 13
+452--INFO	Last Price Set:100.05
+452--INFO	Notified Traders of trade452---Trade ID: 10, Price: 100.05, Volume: 795 between ID:[1] and ID:[2]
+452--INFO	Last Price Set:100.05
+452--INFO	Notified Traders of trade452---Trade ID: 11, Price: 100.05, Volume: 990 between ID:[0] and ID:[2]
+452--INFO	Last Price Set:100.05
+452--INFO	Notified Traders of trade452---Trade ID: 12, Price: 100.05, Volume: 705 between ID:[1] and ID:[2]
+480--INFO	Enqueu

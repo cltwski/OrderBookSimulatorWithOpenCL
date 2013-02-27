@@ -1,0 +1,30 @@
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+40--INFO	Enqueued order: Price: 0.00, Volume: 207, Type: SELL, Market Order: 1, Participant: 3, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 0
+40--INFO	Enqueued order: Price: 0.00, Volume: 708, Type: SELL, Market Order: 1, Participant: 249, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 1
+40--INFO	Enqueued order: Price: 0.00, Volume: 434, Type: SELL, Market Order: 1, Participant: 262, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 2
+40--INFO	Enqueued order: Price: 0.00, Volume: 997, Type: SELL, Market Order: 1, Participant: 303, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 3
+40--INFO	Enqueued order: Price: 99.93, Volume: 969, Type: BUY, Market Order: 0, Participant: 322, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 4
+40--INFO	Enqueued order: Price: 2147483647.00, Volume: 943, Type: BUY, Market Order: 1, Participant: 418, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 5
+40--INFO	Enqueued order: Price: 100.00, Volume: 242, Type: BUY, Market Order: 0, Participant: 432, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 6
+40--INFO	Enqueued order: Price: 2147483647.00, Volume: 702, Type: BUY, Market Order: 1, Participant: 511, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 7
+41--INFO	Enqueued order: Price: 0.00, Volume: 854, Type: SELL, Market Order: 1, Participant: 8, Stock:[ID: 0, Symbol: GOOG], Time: 41, OrderNumber: 8
+41--INFO	Enqueued order: Price: 0.00, Volume: 918, Type: SELL, Market Order: 1, Participant: 139, Stock:[ID: 0, Symbol: GOOG], Time: 41, OrderNumber: 9
+41--INFO	Enqueued order: Price: 2147483647.00, Volume: 764, Type: BUY, Market Order: 1, Participant: 156, Stock:[ID: 0, Symbol: GOOG], Time: 41, OrderNumber: 10
+41--INFO	Enqueued order: Price: 2147483647.00, Volume: 923, Type: BUY, Market Order: 1, Participant: 213, Stock:[ID: 0, Symbol: GOOG], Time: 41, OrderNumber: 11
+41--INFO	Enqueued order: Price: 100.09, Volume: 725, Type: SELL, Market Order: 0, Participant: 386, Stock:[ID: 0, Symbol: GOOG], Time: 41, OrderNumber: 12
+42--INFO	Enqueued order: Price: 2147483647.00, Volume: 736, Type: BUY, Market Order: 1, Participant: 52, Stock:[ID: 0, Symbol: GOOG], Time: 42, OrderNumber: 13
+42--INFO	Enqueued order: Price: 2147483647.00, Volume: 577, Type: BUY, Market Order: 1, Participant: 310, Stock:[ID: 0, Symbol: GOOG], Time: 42, OrderNumber: 14
+42--INFO	Enqueued order: Price: 0.00, Volume: 723, Type: SELL, Market Order: 1, Participant: 315, Stock:[ID: 0, Symbol: GOOG], Time: 42, OrderNumber: 15
+42--INFO	Enqueued order: Price: 0.00, Volume: 402, Type: SELL, Market Order: 1, Participant: 407, Stock:[ID: 0, Symbol: GOOG], Time: 42, OrderNumber: 16
+42--INFO	Enqueued order: Price: 2147483647.00, Volume: 233, Type: BUY, Market Order: 1, Participant: 436, Stock:[ID: 0, Symbol: GOOG], Time: 42, OrderNumber: 17
+42--INFO	Enqueued order: Price: 0.00, Volume: 128, Type: SELL, Market Order: 1, Participant: 466, Stock:[ID: 0, Symbol: GOOG], Time: 42, OrderNumber: 18
+42--INFO	Enqueued order: Price: 0.00, Volume: 216, Type: SELL, Market Order: 1, Participant: 491, Stock:[ID: 0, Symbol: GOOG], Time: 42, OrderNumber: 19
+43--INFO	Enqueued order: Price: 0.00, Volume: 812, Type: SELL, Market Order: 1, Participant: 31, Stock:[ID: 0, Symbol: GOOG], Time: 43, OrderNumber: 20
+43--INFO	Enqueued order: Price: 2147483647.00, Volume: 788, Type: BUY, Market Order: 1, Participant: 40, Stock:[ID: 0, Symbol: GOOG], Time: 43, OrderNumber: 21
+43--INFO	Enqueued order: Price: 2147483647.00, Volume: 773, Type: BUY, Market Order: 1, Participant: 195, Stock:[ID: 0, Symbol: GOOG], Time: 43, OrderNumber: 22
+43--INFO	Enqueued order: Price: 2147483647.00, Volume: 160, Type: BUY, Market Order: 1, Participant: 225, Stock:[ID: 0, Symbol: GOOG], Time: 43, OrderNumber: 23
+43--INFO	Enqueued order: Price: 2147483647.00, Volume: 142, Type: BUY, Market Order: 1, Participant: 347, Stock:[ID: 0, Symbol: GOOG], Time: 43, OrderNumber: 24
+43--INFO	Enqueued order: Price: 100.02, Volume: 598, Type: SELL, Market Order: 0, Participant: 443, Stock:[ID: 0, Symbol:

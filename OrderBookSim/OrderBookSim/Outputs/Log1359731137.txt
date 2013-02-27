@@ -1,0 +1,218 @@
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added trader: Trader[0]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[1]: Cash[$6253.24], Holding:GOOG[17997], PositionCash[$6253.24], PositionHolding:GOOG[17997]
+0--INFO	Added trader: Trader[2]: Cash[$18671.22], Holding:GOOG[4274], PositionCash[$18671.22], PositionHolding:GOOG[4274]
+0--INFO	Added trader: Trader[3]: Cash[$15770.74], Holding:GOOG[6478], PositionCash[$15770.74], PositionHolding:GOOG[6478]
+0--INFO	Added trader: Trader[4]: Cash[$8036.13], Holding:GOOG[16983], PositionCash[$8036.13], PositionHolding:GOOG[16983]
+0--INFO	Added trader: Trader[5]: Cash[$11144.14], Holding:GOOG[19104], PositionCash[$11144.14], PositionHolding:GOOG[19104]
+0--INFO	Added trader: Trader[6]: Cash[$3499.86], Holding:GOOG[11262], PositionCash[$3499.86], PositionHolding:GOOG[11262]
+0--INFO	Added trader: Trader[7]: Cash[$13061.92], Holding:GOOG[11220], PositionCash[$13061.92], PositionHolding:GOOG[11220]
+0--INFO	Added trader: Trader[8]: Cash[$17800.23], Holding:GOOG[15052], PositionCash[$17800.23], PositionHolding:GOOG[15052]
+0--INFO	Added trader: Trader[9]: Cash[$10049.13], Holding:GOOG[12288], PositionCash[$10049.13], PositionHolding:GOOG[12288]
+0--INFO	Added trader: Trader[10]: Cash[$18040.10], Holding:GOOG[7273], PositionCash[$18040.10], PositionHolding:GOOG[7273]
+0--INFO	Added trader: Trader[11]: Cash[$12732.93], Holding:GOOG[15515], PositionCash[$12732.93], PositionHolding:GOOG[15515]
+0--INFO	Added trader: Trader[12]: Cash[$15887.94], Holding:GOOG[11827], PositionCash[$15887.94], PositionHolding:GOOG[11827]
+0--INFO	Added trader: Trader[13]: Cash[$2865.69], Holding:GOOG[6323], PositionCash[$2865.69], PositionHolding:GOOG[6323]
+0--INFO	Added trader: Trader[14]: Cash[$3664.66], Holding:GOOG[9578], PositionCash[$3664.66], PositionHolding:GOOG[9578]
+0--INFO	Added trader: Trader[15]: Cash[$5351.73], Holding:GOOG[19954], PositionCash[$5351.73], PositionHolding:GOOG[19954]
+0--INFO	Added trader: Trader[16]: Cash[$18905.00], Holding:GOOG[15528], PositionCash[$18905.00], PositionHolding:GOOG[15528]
+0--INFO	Added trader: Trader[17]: Cash[$18253.73], Holding:GOOG[18231], PositionCash[$18253.73], PositionHolding:GOOG[18231]
+0--INFO	Added trader: Trader[18]: Cash[$17528.00], Holding:GOOG[15776], PositionCash[$17528.00], PositionHolding:GOOG[15776]
+0--INFO	Added trader: Trader[19]: Cash[$2240.67], Holding:GOOG[16146], PositionCash[$2240.67], PositionHolding:GOOG[16146]
+0--INFO	Added trader: Trader[20]: Cash[$1727.35], Holding:GOOG[970], PositionCash[$1727.35], PositionHolding:GOOG[970]
+0--INFO	Added trader: Trader[21]: Cash[$9538.25], Holding:GOOG[13059], PositionCash[$9538.25], PositionHolding:GOOG[13059]
+0--INFO	Added trader: Trader[22]: Cash[$5601.37], Holding:GOOG[2153], PositionCash[$5601.37], PositionHolding:GOOG[2153]
+0--INFO	Added trader: Trader[23]: Cash[$15774.41], Holding:GOOG[13325], PositionCash[$15774.41], PositionHolding:GOOG[13325]
+0--INFO	Added trader: Trader[24]: Cash[$11893.06], Holding:GOOG[3890], PositionCash[$11893.06], PositionHolding:GOOG[3890]
+0--INFO	Added trader: Trader[25]: Cash[$18627.89], Holding:GOOG[19648], PositionCash[$18627.89], PositionHolding:GOOG[19648]
+0--INFO	Added trader: Trader[26]: Cash[$19512.92], Holding:GOOG[10697], PositionCash[$19512.92], PositionHolding:GOOG[10697]
+0--INFO	Added trader: Trader[27]: Cash[$17375.41], Holding:GOOG[11862], PositionCash[$17375.41], PositionHolding:GOOG[11862]
+0--INFO	Added trader: Trader[28]: Cash[$6221.50], Holding:GOOG[8586], PositionCash[$6221.50], PositionHolding:GOOG[8586]
+0--INFO	Added trader: Trader[29]: Cash[$19807.73], Holding:GOOG[6730], PositionCash[$19807.73], PositionHolding:GOOG[6730]
+0--INFO	Added trader: Trader[30]: Cash[$16541.64], Holding:GOOG[6588], PositionCash[$16541.64], PositionHolding:GOOG[6588]
+0--INFO	Added trader: Trader[31]: Cash[$10080.87], Holding:GOOG[13064], PositionCash[$10080.87], PositionHolding:GOOG[13064]
+0--INFO	Added trader: Trader[32]: Cash[$14033.63], Holding:GOOG[15757], PositionCash[$14033.63], PositionHolding:GOOG[15757]
+0--INFO	Added trader: Trader[33]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[34]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[35]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[36]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[37]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[38]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[39]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[40]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[41]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[42]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[43]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[44]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[45]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[46]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[47]: Cash[$1721.24], Holding:GOOG[18113], PositionCash[$1721.24], PositionHolding:GOOG[18113]
+0--INFO	Added trader: Trader[48]: Cash[$1000000.00], Holding:GOOG[10000000], PositionCash[$1000000.00], PositionHolding:GOOG[10000000]
+0--INFO	Added trader: Trader[49]: Cash[$1000000.00], Holding:GOOG[10000000], PositionCash[$1000000.00], PositionHolding:GOOG[10000000]
+29--INFO	Enqueued order: Price: 0.91, Volume: 802, Type: BUY, Market Order: 0, Participant: 32, Stock:[ID: 0, Symbol: GOOG], Time: 29, OrderNumber: 0
+50--INFO	Enqueued order: Price: 0.00, Volume: 934, Type: SELL, Market Order: 1, Participant: 33, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 1
+50--INFO	Enqueued order: Price: 0.00, Volume: 324, Type: SELL, Market Order: 1, Participant: 34, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 2
+50--INFO	Enqueued order: Price: 0.00, Volume: 219, Type: SELL, Market Order: 1, Participant: 35, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 3
+50--INFO	Enqueued order: Price: 2147483647.00, Volume: 175, Type: BUY, Market Order: 1, Participant: 36, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 4
+50--INFO	Enqueued order: Price: 2147483647.00, Volume: 561, Type: BUY, Market Order: 1, Participant: 37, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 5
+50--INFO	Enqueued order: Price: 0.00, Volume: 606, Type: SELL, Market Order: 1, Participant: 38, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 6
+50--INFO	Enqueued order: Price: 2147483647.00, Volume: 903, Type: BUY, Market Order: 1, Participant: 39, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 7
+50--INFO	Enqueued order: Price: 0.00, Volume: 776, Type: SELL, Market Order: 1, Participant: 40, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 8
+50--INFO	Enqueued order: Price: 2147483647.00, Volume: 416, Type: BUY, Market Order: 1, Participant: 41, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 9
+50--INFO	Enqueued order: Price: 0.00, Volume: 184, Type: SELL, Market Order: 1, Participant: 42, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 10
+50--INFO	Enqueued order: Price: 0.00, Volume: 998, Type: SELL, Market Order: 1, Participant: 43, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 11
+50--INFO	Enqueued order: Price: 2147483647.00, Volume: 212, Type: BUY, Market Order: 1, Participant: 44, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 12
+50--INFO	Enqueued order: Price: 2147483647.00, Volume: 877, Type: BUY, Market Order: 1, Participant: 45, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 13
+50--INFO	Enqueued order: Price: 0.99, Volume: 808, Type: BUY, Market Order: 0, Participant: 46, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 14
+50--INFO	Enqueued order: Price: 1.00, Volume: 354, Type: SELL, Market Order: 0, Participant: 47, Stock:[ID: 0, Symbol: GOOG], Time: 50, OrderNumber: 15
+51--INFO	Last Price Set:0.91
+51--INFO	Notified Traders of trade51---Trade ID: 0, Price: 0.91, Volume: 802 between ID:[32] and ID:[33]
+54--INFO	Last Price Set:0.91
+54--INFO	Notified Traders of trade54---Trade ID: 1, Price: 0.91, Volume: 132 between ID:[36] and ID:[33]
+54--INFO	Last Price Set:0.91
+54--INFO	Notified Traders of trade54---Trade ID: 2, Price: 0.91, Volume: 43 between ID:[36] and ID:[34]
+55--INFO	Last Price Set:0.91
+55--INFO	Notified Traders of trade55---Trade ID: 3, Price: 0.91, Volume: 281 between ID:[37] and ID:[34]
+55--INFO	Last Price Set:0.91
+55--INFO	Notified Traders of trade55---Trade ID: 4, Price: 0.91, Volume: 219 between ID:[37] and ID:[35]
+56--INFO	Last Price Set:0.91
+56--INFO	Notified Traders of trade56---Trade ID: 5, Price: 0.91, Volume: 61 between ID:[37] and ID:[38]
+57--INFO	Last Price Set:0.91
+57--INFO	Notified Traders of trade57---Trade ID: 6, Price: 0.91, Volume: 545 between ID:[39] and ID:[38]
+58--INFO	Last Price Set:0.91
+58--INFO	Notified Traders of trade58---Trade ID: 7, Price: 0.91, Volume: 358 between ID:[39] and ID:[40]
+58--INFO	Enqueued order: Price: 0.00, Volume: 281, Type: SELL, Market Order: 1, Participant: 32, Stock:[ID: 0, Symbol: GOOG], Time: 58, OrderNumber: 16
+59--INFO	Last Price Set:0.91
+59--INFO	Notified Traders of trade59---Trade ID: 8, Price: 0.91, Volume: 416 between ID:[41] and ID:[40]
+62--INFO	Last Price Set:0.91
+62--INFO	Notified Traders of trade62---Trade ID: 9, Price: 0.91, Volume: 2 between ID:[44] and ID:[40]
+62--INFO	Last Price Set:0.91
+62--INFO	Notified Traders of trade62---Trade ID: 10, Price: 0.91, Volume: 184 between ID:[44] and ID:[42]
+62--INFO	Last Price Set:0.91
+62--INFO	Notified Traders of trade62---Trade ID: 11, Price: 0.91, Volume: 26 between ID:[44] and ID:[43]
+63--INFO	Last Price Set:0.91
+63--INFO	Notified Traders of trade63---Trade ID: 12, Price: 0.91, Volume: 877 between ID:[45] and ID:[43]
+64--INFO	Last Price Set:0.99
+64--INFO	Notified Traders of trade64---Trade ID: 13, Price: 0.99, Volume: 95 between ID:[46] and ID:[43]
+66--INFO	Last Price Set:0.99
+66--INFO	Notified Traders of trade66---Trade ID: 14, Price: 0.99, Volume: 281 between ID:[46] and ID:[32]
+87--INFO	Enqueued order: Price: 0.00, Volume: 667, Type: SELL, Market Order: 1, Participant: 32, Stock:[ID: 0, Symbol: GOOG], Time: 87, OrderNumber: 17
+88--INFO	Last Price Set:0.99
+88--INFO	Notified Traders of trade88---Trade ID: 15, Price: 0.99, Volume: 432 between ID:[46] and ID:[32]
+100--INFO	Enqueued order: Price: 0.98, Volume: 215, Type: BUY, Market Order: 0, Participant: 22, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 18
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 230, Type: BUY, Market Order: 1, Participant: 33, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 19
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 976, Type: BUY, Market Order: 1, Participant: 34, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 20
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 594, Type: BUY, Market Order: 1, Participant: 35, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 21
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 480, Type: BUY, Market Order: 1, Participant: 36, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 22
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 828, Type: BUY, Market Order: 1, Participant: 37, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 23
+100--INFO	Enqueued order: Price: 1.04, Volume: 654, Type: SELL, Market Order: 0, Participant: 38, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 24
+100--INFO	Enqueued order: Price: 0.00, Volume: 203, Type: SELL, Market Order: 1, Participant: 39, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 25
+100--INFO	Enqueued order: Price: 0.00, Volume: 608, Type: SELL, Market Order: 1, Participant: 40, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 26
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 232, Type: BUY, Market Order: 1, Participant: 41, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 27
+100--INFO	Enqueued order: Price: 0.96, Volume: 584, Type: BUY, Market Order: 0, Participant: 42, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 28
+100--INFO	Enqueued order: Price: 1.00, Volume: 224, Type: SELL, Market Order: 0, Participant: 43, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 29
+100--INFO	Enqueued order: Price: 0.00, Volume: 561, Type: SELL, Market Order: 1, Participant: 44, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 30
+100--INFO	Enqueued order: Price: 0.92, Volume: 952, Type: BUY, Market Order: 0, Participant: 45, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 31
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 998, Type: BUY, Market Order: 1, Participant: 46, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 32
+100--INFO	Enqueued order: Price: 2147483647.00, Volume: 462, Type: BUY, Market Order: 1, Participant: 47, Stock:[ID: 0, Symbol: GOOG], Time: 100, OrderNumber: 33
+101--INFO	Last Price Set:0.98
+101--INFO	Notified Traders of trade101---Trade ID: 16, Price: 0.98, Volume: 215 between ID:[22] and ID:[32]
+102--INFO	Last Price Set:0.98
+102--INFO	Notified Traders of trade102---Trade ID: 17, Price: 0.98, Volume: 20 between ID:[33] and ID:[32]
+102--INFO	Last Price Set:1.00
+102--INFO	Notified Traders of trade102---Trade ID: 18, Price: 1.00, Volume: 210 between ID:[33] and ID:[47]
+103--INFO	Last Price Set:1.00
+103--INFO	Notified Traders of trade103---Trade ID: 19, Price: 1.00, Volume: 144 between ID:[34] and ID:[47]
+105--INFO	Enqueued order: Price: 0.99, Volume: 1614, Type: BUY, Market Order: 0, Participant: 19, Stock:[ID: 0, Symbol: GOOG], Time: 105, OrderNumber: 34
+107--INFO	Last Price Set:1.04
+107--INFO	Notified Traders of trade107---Trade ID: 20, Price: 1.04, Volume: 654 between ID:[34] and ID:[38]
+108--INFO	Last Price Set:1.04
+108--INFO	Notified Traders of trade108---Trade ID: 21, Price: 1.04, Volume: 178 between ID:[34] and ID:[39]
+108--INFO	Last Price Set:1.04
+108--INFO	Notified Traders of trade108---Trade ID: 22, Price: 1.04, Volume: 25 between ID:[35] and ID:[39]
+109--INFO	Last Price Set:1.04
+109--INFO	Notified Traders of trade109---Trade ID: 23, Price: 1.04, Volume: 569 between ID:[35] and ID:[40]
+109--INFO	Last Price Set:1.04
+109--INFO	Notified Traders of trade109---Trade ID: 24, Price: 1.04, Volume: 39 between ID:[36] and ID:[40]
+112--INFO	Last Price Set:1.00
+112--INFO	Notified Traders of trade112---Trade ID: 25, Price: 1.00, Volume: 224 between ID:[36] and ID:[43]
+112--INFO	Enqueued order: Price: 0.99, Volume: 1306, Type: SELL, Market Order: 0, Participant: 31, Stock:[ID: 0, Symbol: GOOG], Time: 112, OrderNumber: 35
+113--INFO	Last Price Set:1.00
+113--INFO	Notified Traders of trade113---Trade ID: 26, Price: 1.00, Volume: 217 between ID:[36] and ID:[44]
+113--INFO	Last Price Set:1.00
+113--INFO	Notified Traders of trade113---Trade ID: 27, Price: 1.00, Volume: 344 between ID:[37] and ID:[44]
+116--INFO	Enqueued order: Price: 2147483647.00, Volume: 695, Type: BUY, Market Order: 1, Participant: 32, Stock:[ID: 0, Symbol: GOOG], Time: 116, OrderNumber: 36
+118--INFO	Last Price Set:0.99
+118--INFO	Notified Traders of trade118---Trade ID: 28, Price: 0.99, Volume: 484 between ID:[37] and ID:[31]
+118--INFO	Last Price Set:0.99
+118--INFO	Notified Traders of trade118---Trade ID: 29, Price: 0.99, Volume: 232 between ID:[41] and ID:[31]
+118--INFO	Last Price Set:0.99
+118--INFO	Notified Traders of trade118---Trade ID: 30, Price: 0.99, Volume: 590 between ID:[46] and ID:[31]
+125--INFO	Enqueued order: Price: 0.98, Volume: 1069, Type: BUY, Market Order: 0, Participant: 26, Stock:[ID: 0, Symbol: GOOG], Time: 125, OrderNumber: 37
+136--INFO	Enqueued order: Price: 0.98, Volume: 1186, Type: BUY, Market Order: 0, Participant: 27, Stock:[ID: 0, Symbol: GOOG], Time: 136, OrderNumber: 38
+142--INFO	Enqueued order: Price: 0.98, Volume: 1823, Type: BUY, Market Order: 0, Participant: 17, Stock:[ID: 0, Symbol: GOOG], Time: 142, OrderNumber: 39
+145--INFO	Enqueued order: Price: 0.98, Volume: 1332, Type: BUY, Market Order: 0, Participant: 23, Stock:[ID: 0, Symbol: GOOG], Time: 145, OrderNumber: 40
+145--INFO	Enqueued order: Price: 0.98, Volume: 1964, Type: BUY, Market Order: 0, Participant: 25, Stock:[ID: 0, Symbol: GOOG], Time: 145, OrderNumber: 41
+145--INFO	Enqueued order: Price: 0.00, Volume: 994, Type: SELL, Market Order: 1, Participant: 32, Stock:[ID: 0, Symbol: GOOG], Time: 145, OrderNumber: 42
+148--INFO	Last Price Set:0.99
+148--INFO	Notified Traders of trade148---Trade ID: 31, Price: 0.99, Volume: 408 between ID:[46] and ID:[32]
+148--INFO	Last Price Set:0.99
+148--INFO	Notified Traders of trade148---Trade ID: 32, Price: 0.99, Volume: 462 between ID:[47] and ID:[32]
+148--INFO	Last Price Set:2147483647.00
+148--INFO	Notified Traders of trade148---Trade ID: 33, Price: 2147483647.00, Volume: 124 between ID:[32] and ID:[32]
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 784, Type: BUY, Market Order: 1, Participant: 33, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 43
+150--INFO	Enqueued order: Price: 0.00, Volume: 37, Type: SELL, Market Order: 1, Participant: 34, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 44
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 838, Type: BUY, Market Order: 1, Participant: 35, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 45
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 497, Type: SELL, Market Order: 0, Participant: 36, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 46
+150--INFO	Enqueued order: Price: 2147483647.04, Volume: 114, Type: SELL, Market Order: 0, Participant: 37, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 47
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 8, Type: BUY, Market Order: 1, Participant: 38, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 48
+150--INFO	Enqueued order: Price: 2147483646.97, Volume: 913, Type: BUY, Market Order: 0, Participant: 39, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 49
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 349, Type: BUY, Market Order: 1, Participant: 40, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 50
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 69, Type: BUY, Market Order: 1, Participant: 41, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 51
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 999, Type: BUY, Market Order: 0, Participant: 42, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 52
+150--INFO	Enqueued order: Price: 0.00, Volume: 564, Type: SELL, Market Order: 1, Participant: 43, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 53
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 814, Type: BUY, Market Order: 1, Participant: 44, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 54
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 262, Type: BUY, Market Order: 1, Participant: 45, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 55
+150--INFO	Enqueued order: Price: 2147483647.00, Volume: 824, Type: BUY, Market Order: 1, Participant: 46, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 56
+150--INFO	Enqueued order: Price: 0.00, Volume: 779, Type: SELL, Market Order: 1, Participant: 47, Stock:[ID: 0, Symbol: GOOG], Time: 150, OrderNumber: 57
+152--INFO	Last Price Set:2147483647.00
+152--INFO	Notified Traders of trade152---Trade ID: 34, Price: 2147483647.00, Volume: 37 between ID:[32] and ID:[34]
+154--INFO	Last Price Set:2147483647.00
+154--INFO	Notified Traders of trade154---Trade ID: 35, Price: 2147483647.00, Volume: 497 between ID:[32] and ID:[36]
+155--INFO	Last Price Set:2147483647.04
+155--INFO	Notified Traders of trade155---Trade ID: 36, Price: 2147483647.04, Volume: 37 between ID:[32] and ID:[37]
+155--INFO	Last Price Set:2147483647.04
+155--INFO	Notified Traders of trade155---Trade ID: 37, Price: 2147483647.04, Volume: 77 between ID:[33] and ID:[37]
+161--INFO	Last Price Set:2147483647.04
+161--INFO	Notified Traders of trade161---Trade ID: 38, Price: 2147483647.04, Volume: 564 between ID:[33] and ID:[43]
+165--INFO	Last Price Set:2147483647.04
+165--INFO	Notified Traders of trade165---Trade ID: 39, Price: 2147483647.04, Volume: 143 between ID:[33] and ID:[47]
+165--INFO	Last Price Set:2147483647.04
+165--INFO	Notified Traders of trade165---Trade ID: 40, Price: 2147483647.04, Volume: 636 between ID:[35] and ID:[47]
+174--INFO	Enqueued order: Price: 2147483646.98, Volume: 160, Type: BUY, Market Order: 0, Participant: 32, Stock:[ID: 0, Symbol: GOOG], Time: 174, OrderNumber: 58
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 465, Type: BUY, Market Order: 1, Participant: 33, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 59
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 109, Type: BUY, Market Order: 1, Participant: 34, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 60
+200--INFO	Enqueued order: Price: 2147483647.09, Volume: 520, Type: SELL, Market Order: 0, Participant: 35, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 61
+200--INFO	Enqueued order: Price: 2147483647.07, Volume: 282, Type: SELL, Market Order: 0, Participant: 36, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 62
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 232, Type: BUY, Market Order: 1, Participant: 37, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 63
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 921, Type: BUY, Market Order: 1, Participant: 38, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 64
+200--INFO	Enqueued order: Price: 0.00, Volume: 341, Type: SELL, Market Order: 1, Participant: 39, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 65
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 324, Type: BUY, Market Order: 1, Participant: 40, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 66
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 526, Type: BUY, Market Order: 0, Participant: 41, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 67
+200--INFO	Enqueued order: Price: 0.00, Volume: 393, Type: SELL, Market Order: 1, Participant: 42, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 68
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 20, Type: BUY, Market Order: 1, Participant: 43, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 69
+200--INFO	Enqueued order: Price: 0.00, Volume: 311, Type: SELL, Market Order: 1, Participant: 44, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 70
+200--INFO	Enqueued order: Price: 2147483646.96, Volume: 345, Type: BUY, Market Order: 0, Participant: 45, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 71
+200--INFO	Enqueued order: Price: 0.00, Volume: 345, Type: SELL, Market Order: 1, Participant: 46, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 72
+200--INFO	Enqueued order: Price: 2147483647.00, Volume: 178, Type: BUY, Market Order: 1, Participant: 47, Stock:[ID: 0, Symbol: GOOG], Time: 200, OrderNumber: 73
+202--INFO	Enqueued order: Price: 2147483647.03, Volume: 97, Type: SELL, Market Order: 0, Participant: 20, Stock:[ID: 0, Symbol: GOOG], Time: 202, OrderNumber: 74
+202--INFO	Enqueued order: Price: 2147483647.03, Volume: 1305, Type: SELL, Market Order: 0, Participant: 21, Stock:[ID: 0, Symbol: GOOG], Time: 202, OrderNumber: 75
+202--INFO	Enqueued order: Price: 2147483647.03, Volume: 236, Type: SELL, Market Order: 0, Participant: 22, Stock:[ID: 0, Symbol: GOOG], Time: 202, OrderNumber: 76
+202--INFO	Enqueued order: Price: 2147483647.03, Volume: 673, Type: SELL, Market Order: 0, Participant: 29, Stock:[ID: 0, Symbol: GOOG], Time: 202, OrderNumber: 77
+203--INFO	Last Price Set:2147483647.09
+203--INFO	Notified Traders of trade203---Trade ID: 41, Price: 2147483647.09, Volume: 202 between ID:[35] and ID:[35]
+203--INFO	Last Price Set:2147483647.09
+203--INFO	Notified Traders of trade203---Trade ID: 42, Price: 2147483647.09, Volum

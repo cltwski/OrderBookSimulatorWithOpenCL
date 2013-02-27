@@ -1,0 +1,11 @@
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+0--INFO	Added rule
+40--INFO	Enqueued order: Price: 99.92, Volume: 290, Type: BUY, Market Order: 0, Participant: 13, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 0
+40--INFO	Enqueued order: Price: 2147483647.00, Volume: 278, Type: BUY, Market Order: 1, Participant: 94, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 1
+40--INFO	Enqueued order: Price: 0.00, Volume: 71, Type: SELL, Market Order: 1, Participant: 187, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 2
+40--INFO	Enqueued order: Price: 2147483647.00, Volume: 343, Type: BUY, Market Order: 1, Participant: 267, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 3
+40--INFO	Enqueued order: Price: 2147483647.00, Volume: 559, Type: BUY, Market Order: 1, Participant: 375, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 4
+40--INFO	Enqueued order: Price: 2147483647.00, Volume: 415, Type: BUY, Market Order: 1, Participant: 446, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 5
+40--INFO	Enqueued order: Price: 2147483647.00, Volume: 415, Type: BUY, Market Order: 1, Participant: 447, Stock:[ID: 0, Symbol: GOOG], Time: 40, OrderNumber: 6
