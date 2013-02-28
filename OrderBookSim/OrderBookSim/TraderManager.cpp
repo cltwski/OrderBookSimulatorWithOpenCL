@@ -197,7 +197,7 @@ void TraderManager::process(OrderBook* book)
 
 		ocl->RefreshBuffers(_tradersBuffer, data);
 		ocl->UpdateBuffersAndArgs();
-		_procTime = ocl->Run(cl::NDRange(10), cl::NullRange); //TODO NDRange
+		_procTime = ocl->Run(cl::NDRange(4), cl::NullRange); //TODO NDRange
 
 		ReadBuffers(book);
 		_lastT = _currentT;

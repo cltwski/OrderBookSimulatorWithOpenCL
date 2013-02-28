@@ -157,7 +157,7 @@ struct
 //#define RT_PRICE_CHANGE 0.01
 //#define RT_PRICE_SIZE 10
 
-void RandomTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
+void RandomTrader(TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
 {
     uint roll = MWC64X_NextUint(rng);
     TraderCL tcl = (*traderCL);
@@ -194,7 +194,7 @@ void RandomTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, mwc
     (*traderCL) = tcl;
 }
 
-void LargeRandomTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
+void LargeRandomTrader(TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
 {
     TraderCL tcl = (*traderCL);
     tcl.isMarket = true;
@@ -224,7 +224,7 @@ void LargeRandomTrader(__global TraderCL* traderCL, const MarketDataSmallCL data
 //#define PT_BUY_THRESH
 //#define PT_BOUNDS
 
-void PositionTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
+void PositionTrader(TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
 {
     TraderCL tcl = (*traderCL);
     
@@ -326,7 +326,7 @@ bool checkShortTermRise(__global PastPrice* prices, int n)
 
 //#define MT_SIZE_THRESH
 
-void MomentumTrader(__global TraderCL* traderCL, __global PastPrice* prices, const MarketDataSmallCL data, mwc64x_state_t* rng)
+void MomentumTrader(TraderCL* traderCL, __global PastPrice* prices, const MarketDataSmallCL data, mwc64x_state_t* rng)
 {
     bool longTermRise = checkLongTermRise(prices, data.numPastPrices);
     bool shortTermRise = checkShortTermRise(prices, data.numPastPrices);
@@ -393,15 +393,19 @@ __kernel void ProcessTraders(ulong offset, __global TraderCL* traders, __global 
     {
         mwc64x_state_t rng;
         MWC64X_SeedStreams(&rng, offset, perStream);
+
+		TraderCL tcl = tradersDest[i];
         
-        if (tradersDest[i].type == 0)
-            RandomTrader(&tradersDest[i], data, &rng);
+        if (tcl.type == 0)
+            RandomTrader(&tcl, data, &rng);
         else if (tradersDest[i].type == 1)
-            LargeRandomTrader(&tradersDest[i], data, &rng);
+            LargeRandomTrader(&tcl, data, &rng);
         else if (tradersDest[i].type == 2)
-            PositionTrader(&tradersDest[i], data, &rng);
+            PositionTrader(&tcl, data, &rng);
         else if (tradersDest[i].type == 3)
-            MomentumTrader(&tradersDest[i], prices, data, &rng);
+            MomentumTrader(&tcl, prices, data, &rng);
+
+		tradersDest[i] = tcl;
     }
 }
 

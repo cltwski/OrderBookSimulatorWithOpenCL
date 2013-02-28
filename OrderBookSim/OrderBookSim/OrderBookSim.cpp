@@ -34,13 +34,13 @@ int main()
 	//Init orderbook and trader manager
 	Stock stock(0,"GOOG", 100);
 	TraderManager tm(true);
-	for (int i=0; i < 10; i++)
+	for (int i=0; i < 4; i++)
 		tm.addTrader(new Trader(&stock, 10000, 10000, std::floor(((double)rand()*2500/RAND_MAX)+1250), RANDOM_TRADER));
-	for (int i=0; i < 10; i++)
+	for (int i=0; i < 4; i++)
 		tm.addTrader(new Trader(&stock, 10000, 10000, std::floor(((double)rand()*5000/RAND_MAX)+2500), LARGE_RANDOM_TRADER));
-	for (int i=0; i < 10; i++)
+	for (int i=0; i < 4; i++)
 		tm.addTrader(new Trader(&stock, 1000, 1000, std::floor(((double)rand()*1000/RAND_MAX)+500), POSITION_TRADER));
-	for (int i=0; i < 10; i++)
+	for (int i=0; i < 4; i++)
 		tm.addTrader(new Trader(&stock, 20000, 2000, std::floor(((double)rand()*750/RAND_MAX)+375), MOMENTUM_TRADER));
 	OrderBook book(&stock, &tm, true);
 
