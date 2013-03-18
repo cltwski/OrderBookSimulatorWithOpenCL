@@ -1,5 +1,0 @@
-0--INFO	Added rule
-0--INFO	Added rule
-0--INFO	Added rule
-0--INFO	Added rule
-54--INFO	Enqueued order: Price: 2147483647.00, Volume: 259, Type: BUY, Market Order: 1, Participant: 1, Stock:[ID: 0, Symbol: GOOG], Time: 54, OrderNumber: 0

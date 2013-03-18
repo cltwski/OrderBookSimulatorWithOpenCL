@@ -10,5 +10,6 @@ public:
 
 	bool fitsCriteria(OrderBook* orderBook, Order* order);
 	Trade* processRule(OrderBook*& orderBook, Order*& order);
+	std::string ToString(){ return "LimitMarket Rule";}
 };
 

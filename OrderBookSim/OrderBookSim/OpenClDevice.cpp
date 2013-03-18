@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "OpenClDevice.h"
 
+const std::string OpenClDevice::logName = "OpenClDevice";
 
 OpenClDevice::OpenClDevice(cl::Context& context, cl::vector<cl::Device>& devices, const char* kernelFile, bool profiling)
 {
@@ -9,6 +10,8 @@ OpenClDevice::OpenClDevice(cl::Context& context, cl::vector<cl::Device>& devices
 	_kernelFile = kernelFile;
 	_profiling = profiling;
 	srand(time(0));
+	
+	_logger = Logger::GetInstance(LOGLEVEL);
 }
 
 
@@ -27,27 +30,43 @@ void OpenClDevice::SetupBuildOptions(int rtCount, int lrtCount, int ptCount, int
 																				_list.RT_PRICE_CHANGE.Name(), _list.RT_PRICE_CHANGE.Value(),
 																				_list.RT_PRICE_SIZE.Name(), _list.RT_PRICE_SIZE.Value(),
 																				_list.RT_SIZE.Name(), _list.RT_SIZE.Value());*/
-		sprintf_s(buf, "-D RT_BUYSELL_THRESH=2 -D RT_MARKET_THRESH=8 -D RT_SIZE=1000 -D RT_PRICE_CHANGE=0.01 -D RT_PRICE_SIZE=10 -D RT_COUNT=%d ", rtCount);
+		sprintf_s(buf, "-D RT_BUYSELL_THRESH=2 -D RT_MARKET_THRESH=2 -D RT_SIZE=1000 -D RT_PRICE_CHANGE=0.01 -D RT_PRICE_SIZE=10 -D RT_COUNT=%d ", rtCount);
 		_buildOptions += std::string(buf);
+		std::stringstream temp;
+		temp << "Added " << std::string(buf) << " to build options";
+		_logger->Debug(logName, temp.str());
 	}
 	if (lrtCount > -1)
 	{
 		char buf[64];
 		sprintf_s(buf, "-D LRT_COUNT=%d ", lrtCount);
 		_buildOptions += std::string(buf);
+		std::stringstream temp;
+		temp << "Added " << std::string(buf) << " to build options";
+		_logger->Debug(logName, temp.str());
 	}
 	if (ptCount > -1)
 	{
 		char buf[128];
 		sprintf_s(buf, "-D PT_SELL_THRESH=10 -D PT_BUY_THRESH=8 -D PT_BOUNDS=3 -D PT_COUNT=%d ", ptCount);
 		_buildOptions += std::string(buf);
+		std::stringstream temp;
+		temp << "Added " << std::string(buf) << " to build options";
+		_logger->Debug(logName, temp.str());
 	}
 	if (mtCount > -1)
 	{
 		char buf[128];
 		sprintf_s(buf, "-D MT_SIZE_THRESH=10 -D MT_SHORT_RANGE=10 -D MT_COUNT=%d ", mtCount);
 		_buildOptions += std::string(buf);
+		std::stringstream temp;
+		temp << "Added " << std::string(buf) << " to build options";
+		_logger->Debug(logName, temp.str());
 	}
+
+	std::stringstream temp;
+	temp << "Build Options are: " << _buildOptions;
+	_logger->Info(logName, temp.str());
 }
 
 void OpenClDevice::BuildKernel(std::string kernelName)
@@ -55,24 +74,35 @@ void OpenClDevice::BuildKernel(std::string kernelName)
 	_kernelName = kernelName;
 
 	//Setup the program
+	std::stringstream tempSS;
+	tempSS << "Building file: " << _kernelFile;
+	_logger->Debug(logName, tempSS.str());
+	tempSS.clear();
+
 	std::ifstream file(_kernelFile);
 	std::string prog(std::istreambuf_iterator<char>(file), (std::istreambuf_iterator<char>()));
 	cl::Program::Sources source(1, std::make_pair(prog.c_str(), prog.length()+1));
 	cl::Program program(_context, source);
 	file.close();
 
+	_logger->Debug(logName, "DONE");
+
 
 	//build the program
 	try
 	{
+		_logger->Debug(logName, "Compiling...");
 		program.build(_devices, _buildOptions.c_str());
+		_logger->Debug(logName, "DONE");
 	}
 	catch (cl::Error& error)
 	{
-		std::cerr << "Build failed! " << error.what() << "(" << clErr(error.err()) << ")" << std::endl;
-		std::cerr << "Retrieving log..." << std::endl;
-		std::cerr << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_devices[0]) << std::endl;
-		throw;
+		tempSS << "Build failed! " << error.what() << "(" << clErr(error.err()) << ")" << std::endl;
+		tempSS << "Retrieving log..." << std::endl;
+		tempSS << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_devices[0]) << std::endl;
+		_logger->Error(logName, tempSS.str());
+		std::string temp = Utils::Merge("Failed in Build Kernel", error.what());
+		throw new std::exception(temp.c_str());
 	}
 
 	_kernel = cl::Kernel(program, _kernelName.c_str());
@@ -85,26 +115,90 @@ void OpenClDevice::SetupBuffers(TraderCLArray tradersBuffer, MarketDataCL data)
 
 	cl_int err;
 	_tradersBuffer = cl::Buffer(_context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR, _traders.number*sizeof(TraderCL), _traders.traders, &err);
-	Try(err);
+	try
+	{
+		Try(err);
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to setup traders buffer", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
+
 	_marketDataBuffer = cl::Buffer(_context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR, _data.numPastPrices*sizeof(PastPrice), _data.prices, &err);
-	Try(err);
+	try
+	{
+		Try(err);
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to setup market data buffer", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
 }
 
 void OpenClDevice::SetupKernelArgs()
 {
-	Try(_kernel.setArg(0, (cl_ulong)rand()));
-	Try(_kernel.setArg(1, _tradersBuffer));
-	Try(_kernel.setArg(2, _marketDataBuffer));
-	Try(_kernel.setArg(3, MarketDataSmallCL(_data.buyVolume, _data.sellVolume, _data.getLatestPrice().price, _data.numPastPrices)));
+	try
+	{
+		Try(_kernel.setArg(0, (cl_ulong)rand()));
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to setup arg 0", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
+
+	try
+	{
+		Try(_kernel.setArg(1, _tradersBuffer));
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to setup arg 1", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
+
+	try
+	{
+		Try(_kernel.setArg(2, _marketDataBuffer));
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to setup arg 2", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
+
+	try
+	{
+		Try(_kernel.setArg(3, MarketDataSmallCL(_data.buyVolume, _data.sellVolume, _data.getLatestPrice().price, _data.numPastPrices)));
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to setup arg 3", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
 }
 
 void OpenClDevice::EnqueueWriteBuffers(cl::CommandQueue& queue, cl::Event* writeEvent)
 {
-	//Try(queue.enqueueWriteBuffer(_ordersBuffer, CL_TRUE, 0, _ordersCount*sizeof(OrderCL), _orders, NULL, &writeEvent));
-	Try(queue.enqueueWriteBuffer(_tradersBuffer, CL_TRUE, 0, _traders.number*sizeof(TraderCL), _traders.traders, NULL, writeEvent));
+	try
+	{
+		Try(queue.enqueueWriteBuffer(_tradersBuffer, CL_TRUE, 0, _traders.number*sizeof(TraderCL), _traders.traders, NULL, writeEvent));
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to enqueue write buffers", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
 }
-
-//TODO ENQUEUENDRRANGE
 
 double OpenClDevice::EnqueueRead(cl::CommandQueue& queue, cl::Event& finishEvent)
 {
@@ -120,7 +214,16 @@ double OpenClDevice::EnqueueRead(cl::CommandQueue& queue, cl::Event& finishEvent
 		//TODO something with this time
 	}
 
-	Try(queue.enqueueReadBuffer(_tradersBuffer, CL_TRUE, NULL, _traders.number*sizeof(TraderCL), _traders.traders));
+	try
+	{
+		Try(queue.enqueueReadBuffer(_tradersBuffer, CL_TRUE, NULL, _traders.number*sizeof(TraderCL), _traders.traders));
+	}
+	catch (std::exception exception)
+	{
+		std::string temp = Utils::Merge("Failed to Enqueue Read Buffers", exception.what());
+		_logger->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
 	return time;
 }
 
@@ -145,7 +248,7 @@ void OpenClDevice::Try(cl_int err)
 {
 	if (err != CL_SUCCESS)
 	{
-		std::cout << clErr(err) << std::endl;
+		throw new std::exception(clErr(err));
 	}
 }
 

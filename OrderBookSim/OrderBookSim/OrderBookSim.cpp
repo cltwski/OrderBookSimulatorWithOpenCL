@@ -13,12 +13,12 @@
 #include "TraderManager.h"
 #include "Rules.h"
 #include "Order.h"
-#include "Traders.h"
 #include "WallTimer.h"
 #include "ITrader.h"
 #include "Trader.h"
 
 #define DURATION 10000
+#define INCR 5
 
 class ITrader;
 class Trader;
@@ -34,14 +34,14 @@ int main()
 	//Init orderbook and trader manager
 	Stock stock(0,"GOOG", 100);
 	TraderManager tm(true);
-	for (int i=0; i < 4; i++)
+	for (int i=0; i < 32; i++)
 		tm.addTrader(new Trader(&stock, 10000, 10000, std::floor(((double)rand()*2500/RAND_MAX)+1250), RANDOM_TRADER));
-	for (int i=0; i < 4; i++)
+	for (int i=0; i < 32; i++)
 		tm.addTrader(new Trader(&stock, 10000, 10000, std::floor(((double)rand()*5000/RAND_MAX)+2500), LARGE_RANDOM_TRADER));
-	for (int i=0; i < 4; i++)
+	for (int i=0; i < 32; i++)
 		tm.addTrader(new Trader(&stock, 1000, 1000, std::floor(((double)rand()*1000/RAND_MAX)+500), POSITION_TRADER));
-	for (int i=0; i < 4; i++)
-		tm.addTrader(new Trader(&stock, 20000, 2000, std::floor(((double)rand()*750/RAND_MAX)+375), MOMENTUM_TRADER));
+	for (int i=0; i < 32; i++)
+		tm.addTrader(new Trader(&stock, 20000, 2000, std::floor(((double)rand()*2000/RAND_MAX)+1000), MOMENTUM_TRADER));
 	OrderBook book(&stock, &tm, true);
 
 	//Order matters
@@ -50,52 +50,36 @@ int main()
 	book.addRule(new LimitMarketRule());
 	book.addRule(new LimitLimitRule());
 
-	//Trader 1 Registrations
-	//for (int i=0; i < 10; i++)
-		//book.registerTrader(new PositionTrader(&stock, std::floor(((double)rand()*20000/RAND_MAX)+1), ((double)rand()*20000/RAND_MAX), std::floor(((double)rand()*200/RAND_MAX)+100)));
-
-	//Trader 2 Registrations
-	//for (int i=0; i < 10; i++)
-		//book.registerTrader(new MomentumTrader(&stock, std::floor(((double)rand()*20000/RAND_MAX)+1), ((double)rand()*20000/RAND_MAX), std::floor(((double)rand()*250/RAND_MAX)+125)));
-
-	//Trader 3 Registrations
-	//for (double i=0; i < 10; i++)
-		//book.registerTrader(new RandomTrader(&stock, std::floor(((double)rand()*20000/RAND_MAX)+1), ((double)rand()*20000/RAND_MAX), std::floor(((double)rand()*80/RAND_MAX)+40)));
-	
-	//Trader 4 Registrations
-	//for (int i=0; i < 5; i++)
-		//book.registerTrader(new LargeRandomTrader(&stock, 10000000, 1000000, 450+i));
-
-	//book.submitOrder(new Order(BUY, 100, 0, 99, true, &stock, 0));
-	//book.submitOrder(new Order(SELL, 150, 0, 99, true, &stock, 0));
-
 	timer.Start();
 
-	while (time < DURATION)
-	{	
-		//book.printBrief();
-		//book.print();
+	Logger* logger = Logger::GetInstance(LOGLEVEL);
 
-		//Order book matching occurs
-		//timer.Start();
-		book.matchOrders();
-		//std::cout << "\nOrder matching: " << timer.GetCounter() << "ms\n";
+	logger->Overall("SimTime,StepDuration");
 
-		//timer.Start();
-		book.processTraders();
-		//std::cout << "Trader processing: " << timer.GetCounter() << "ms\n";
+	for (int i=1; i <= INCR; i++)
+	{
+		while (time < (DURATION*i))
+		{	
+			//Order book matching occurs
+			WallTimer timer1;
+			timer1.Start();
 
-		book.update();
-		time = book.getTime();
+			book.matchOrders();
+			book.processTraders();
 
-		//std::getchar();
-		//system("cls");
+			std::stringstream temp;
+			temp << book.getTime() << "," << timer1.GetCounter();
+			logger->Overall(temp.str());
+
+			book.update();
+			time = book.getTime();
+		}
+	
+		double timeTaken = timer.GetCounter();
+		book.printBrief();
+		std::cout << "\nTook: " << timeTaken << "ms to complete " << DURATION << "ms" <<std::endl;
+		std::cout << "Performance vs real time: " << DURATION/timeTaken << "x" << std::endl;
 	}
-
-	double timeTaken = timer.GetCounter();
-	book.printBrief();
-	std::cout << "\nTook: " << timeTaken << "ms to complete " << DURATION << "ms" <<std::endl;
-	std::cout << "Performance vs real time: " << DURATION/timeTaken << "x" << std::endl;
 
 	std::cout << "COMPLETE" << std::endl;
 

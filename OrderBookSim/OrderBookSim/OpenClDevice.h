@@ -5,6 +5,8 @@
 #include <CL\cl.hpp>
 
 #include "OpenClStructs.h"
+#include "Logger.h"
+#include "Utils.h"
 
 
 #define __NO_STD_VECTOR
@@ -29,6 +31,8 @@ private:
 
 	//Other
 	bool _profiling;
+	Logger* _logger;
+	static const std::string logName;
 
 protected:
 	const char* clErr(cl_int err);

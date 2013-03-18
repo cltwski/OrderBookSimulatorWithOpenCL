@@ -58,10 +58,32 @@ void Trader::notify(Trade* trade)
 	}
 }
 
+std::string Trader::toString()
+{
+	std::stringstream tempSS;
+	char str[128];
+	sprintf_s(str, "Trader[%d]: Cash[$%.2f], PositionCash[$%.2f], ", _id, _cashPosition, _cashPosWOrders);
+	tempSS << str;
+
+	auto it1 = _stockPositions.begin();
+	auto it2 = _stockPosWOrders.begin();
+
+	while (it1 != _stockPositions.end() && it2 != _stockPosWOrders.end())
+	{
+		std::stringstream temp;
+		temp << "Holding:" << it1->first << "[" << it1->second << "], PositionHolding:" << it2->first << "[" << it2->second << "], ";
+		tempSS << temp.str();
+		it1++;
+		it2++;
+	}
+
+	return tempSS.str();
+}
+
 std::string Trader::toString(std::string symbol)
 {
 	char str[128];
-	sprintf_s(str, "Trader[%d]: Cash[$%.2f], Holding:%s[%d], PositionCash[$%.2f], PositionHolding:%s[%d]", _id, _cashPosition, symbol, _stockPositions[symbol], _cashPosWOrders, symbol, _stockPosWOrders[symbol]);
+	sprintf_s(str, "Trader[%d]: Cash[$%.2f], PositionCash[$%.2f], Holding:%s[%d], PositionHolding:%s[%d]", _id, _cashPosition, _cashPosWOrders, symbol, _stockPositions[symbol], symbol, _stockPosWOrders[symbol]);
 	return std::string(str);
 }
 

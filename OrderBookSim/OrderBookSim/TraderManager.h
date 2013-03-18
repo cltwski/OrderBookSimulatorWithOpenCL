@@ -18,6 +18,8 @@ private:
 	std::vector<ITrader*> _largeRandomTraders;
 	std::vector<ITrader*> _positionTraders;
 	std::vector<ITrader*> _momentumTraders;
+
+	std::vector<ITrader*> _allTraders;
 	//TODO add more traders type
 	TraderCLArray _tradersBuffer;
 	OpenClController* ocl;
@@ -27,9 +29,14 @@ private:
 	int _minTraderProcT;
 	int _currentT, _lastT;
 
+	bool _profiling;
+
 	void WriteBuffers(std::string symbol);
 	void ReadBuffers(OrderBook* book);
 	ITrader* matchTCLtoTrader(TraderCL tcl, TraderType type);
+
+	Logger* _logger;
+	static const std::string logName;
 
 public:
 	TraderManager(bool profiling = false);

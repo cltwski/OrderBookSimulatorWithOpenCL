@@ -8,9 +8,10 @@
 #include "OrderRequest.h"
 #include "OrderQueue.h"
 #include "TraderManager.h"
-#include "Logger.h"
 #include "WallTimer.h"
 #include "OpenClStructs.h"
+#include "Logger.h"
+#include "Utils.h"
 
 class TraderManager;
 class RuleManager;
@@ -48,6 +49,7 @@ private:
 	int _buyVolume, _sellVolume;
 
 	Logger* _logger;
+	static const std::string logName;
 
 	Order* getOrderPtr(Order order);
 	Order* getOrderPtr(int id);

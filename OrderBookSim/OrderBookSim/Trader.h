@@ -49,6 +49,7 @@ public:
 	void update(int time);
 	void notify(Trade* trade);
 	
+	std::string toString();
 	std::string toString(std::string symbol);
 	int getId();
 	int getProcessTime();

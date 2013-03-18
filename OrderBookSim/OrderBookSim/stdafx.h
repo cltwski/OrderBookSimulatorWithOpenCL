@@ -22,10 +22,13 @@
 #include <random>
 #include <Windows.h>
 #include <exception>
+#include <cassert>
 
 #define __CL_ENABLE_EXCEPTIONS
 #define __NO_STD_VECTOR
 #include <CL\cl.hpp>
+
+#define LOGLEVEL 0
 
 
 

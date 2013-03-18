@@ -32,3 +32,14 @@ Order OrderRequest::getOrder()
 {
 	return (*_order);
 }
+
+std::string OrderRequest::ToString()
+{
+	std::string temp;
+	if (this->isInsert())
+		temp = "Insert ";
+	else if (this->isRemove())
+		temp = "Remove ";
+
+	return temp + _order->toString();
+}

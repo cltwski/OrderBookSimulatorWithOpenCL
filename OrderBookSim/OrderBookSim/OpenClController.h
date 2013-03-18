@@ -16,14 +16,20 @@ private:
 	OpenClDevice* _device;
 	TraderCLArray _tradersBuffer;
 	MarketDataCL _data;
+	static const std::string logName;
 
 	bool _profiling;
+	Logger* _logger;
+
+	static bool _instanceFlag;
+	static OpenClController* _instance;
+	OpenClController();
 public:
-	OpenClController(TraderCLArray tradersBuffer, bool profiling = false);
+	static OpenClController* GetInstance();
 	~OpenClController();
 
 	void RefreshBuffers(TraderCLArray tb, MarketDataCL data);
-	void SetupFirstTime(std::string kernelName, int rtCount, int lrtCount, int ptCount, int mtCount);
+	void SetupFirstTime(TraderCLArray tradersBuffer, std::string kernelName, int rtCount, int lrtCount, int ptCount, int mtCount, bool profiling = false);
 	void UpdateBuffersAndArgs();
 	double Run(cl::NDRange globalRange, cl::NDRange localRange);
 

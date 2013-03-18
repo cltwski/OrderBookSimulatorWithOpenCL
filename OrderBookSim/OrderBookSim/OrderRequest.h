@@ -15,5 +15,7 @@ public:
 	bool isRemove();
 
 	Order getOrder();
+
+	std::string ToString();
 };
 

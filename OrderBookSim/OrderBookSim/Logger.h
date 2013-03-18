@@ -1,30 +1,58 @@
 #pragma once
 
+#include "WallTimer.h"
+#include "Utils.h"
 
-#define INFO 1
-#define DEBUG 2
-#define WARNING 3
-#define FERROR 4
+#define MAXLINECOUNT 50000
 
 class Logger
 {
 private:
-	std::ofstream log;
-	std::ofstream out;
+	static const int info = 1;
+	static const int debug = 0;
+	static const int warn = 2;
+	static const int error = 3;
+
+	//Set these values in Logger.cpp
+	static const std::string infoCol;
+	static const std::string debugCol;
+	static const std::string warnCol;
+	static const std::string errorCol;
 
 	int _level;
-	bool _output;
 	int _time;
+	long _t;
+	int _lineCount;
+	int _fileCount;
+
+	std::ofstream _log;
+	std::ofstream _fullLog;
+	std::ofstream _data;
+	std::ofstream _overall;
+	std::string _directory;
+	std::string _fileName;
+
+	static bool _instanceFlag;
+	static Logger* _instance;
+	WallTimer _timer;
+	Logger(int level);
+
 public:
-	Logger(int level, bool output);
-	~Logger(void);
+	static Logger* GetInstance(int level=3);
+	void SetLevel(int level);
+	int GetLevel();
 
-	void output(std::string text);
-	void info(std::string text);
-	void debug(std::string text);
-	void warning(std::string text);
-	void error(std::string text);
+	void SetTime(int time, bool refresh=false);
+	int GetTime();
 
-	void update();
+	~Logger();
+
+	void Info(std::string source, std::string text);
+	void Debug(std::string source, std::string text);
+	void Warn(std::string source, std::string text);
+	void Error(std::string source, std::string text);
+	void Data(std::string text);
+	void Overall(std::string text);
 };
 
+std::wstring s2ws(const std::string& s);
