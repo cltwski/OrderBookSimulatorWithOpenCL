@@ -135,32 +135,6 @@ void TraderManager::print(std::string symbol)
 
 	stream << "Random Traders\n";
 
-	/*for (int i=0; i < _randomTraders.size(); i++)
-	{
-		stream << _randomTraders[i]->toString(symbol) << std::endl;
-	}
-
-	stream << "Large Random Traders\n";
-
-	for (int i=0; i < _largeRandomTraders.size(); i++)
-	{
-		stream << _largeRandomTraders[i]->toString(symbol) << std::endl;
-	}
-
-	stream << "Position Traders\n";
-
-	for (int i=0; i < _positionTraders.size(); i++)
-	{
-		stream << _positionTraders[i]->toString(symbol) << std::endl;
-	}
-
-	stream << "Momentum Traders\n";
-
-	for (int i=0; i < _momentumTraders.size(); i++)
-	{
-		stream << _momentumTraders[i]->toString(symbol) << std::endl;
-	}*/
-
 	for (int i=0; i < _allTraders.size(); i++)
 	{
 		stream << _allTraders[i]->toString(symbol) << std::endl;
@@ -174,25 +148,6 @@ void TraderManager::notify(int time)
 	Logger::GetInstance()->Debug(logName, Utils::Merge("Notifying traders of time:", Utils::ItoS(time)));
 	_currentT = time;
 
-	/*for (int i=0; i < _randomTraders.size(); i++)
-	{
-		_randomTraders[i]->update(time);
-	}
-
-	for (int i=0; i < _largeRandomTraders.size(); i++)
-	{
-		_largeRandomTraders[i]->update(time);
-	}
-
-	for (int i=0; i < _positionTraders.size(); i++)
-	{
-		_positionTraders[i]->update(time);
-	}
-
-	for (int i=0; i < _momentumTraders.size(); i++)
-	{
-		_momentumTraders[i]->update(time);
-	}*/
 	for (int i=0; i < _allTraders.size(); i++)
 	{
 		_allTraders[i]->update(time);

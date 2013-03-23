@@ -289,9 +289,9 @@ void PositionTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, m
 	{
 		tcl.volume = -ceil((double)tcl.volPos/PT_SELL_THRESH);
 		tcl.price = data.lastPrice + (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
-		tcl.isMarket = false;
+		tcl.isMarket = true;
 	}
-	else if (tcl.volPosWO <= 0)
+	else if (tcl.volPosWO <= tcl.startVol)
 	{
 		tcl.volume = 10;//floor((double)tcl.cashPos * data.lastPrice/PT_BUY_THRESH);
 		tcl.price = data.lastPrice + (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));

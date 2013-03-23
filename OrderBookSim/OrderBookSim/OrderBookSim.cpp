@@ -10,12 +10,12 @@
 #include "WallTimer.h"
 #include "Trader.h"
 
-#define DURATION 5
-#define NUMRT 0
-#define NUMLRT 0
-#define NUMPT 1
-#define NUMMT 0
-#define RUNS 1
+#define DURATION 60000
+#define NUMRT 32
+#define NUMLRT 32
+#define NUMPT 32
+#define NUMMT 32
+#define RUNS 4
 
 class Trader;
 
