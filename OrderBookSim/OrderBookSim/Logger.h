@@ -2,6 +2,7 @@
 
 #include "WallTimer.h"
 #include "Utils.h"
+#include "Trade.h"
 
 #define MAXLINECOUNT 50000
 
@@ -29,6 +30,7 @@ private:
 	std::ofstream _fullLog;
 	std::ofstream _data;
 	std::ofstream _overall;
+	std::ofstream _trades;
 	std::string _directory;
 	std::string _fileName;
 
@@ -38,7 +40,7 @@ private:
 	Logger(int level);
 
 public:
-	static Logger* GetInstance(int level=3);
+	static Logger* GetInstance(int level=1);
 	void SetLevel(int level);
 	int GetLevel();
 
@@ -53,6 +55,7 @@ public:
 	void Error(std::string source, std::string text);
 	void Data(std::string text);
 	void Overall(std::string text);
-};
+	void Trade(std::string text);
 
-std::wstring s2ws(const std::string& s);
+	std::string GetDirectory();
+};

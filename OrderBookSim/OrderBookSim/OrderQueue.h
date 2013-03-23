@@ -1,25 +1,24 @@
 #pragma once
 
+#include "OrderRequest.h"
 
-
-template <class T>
 class OrderQueue
 {
 private:
-	std::vector<T> elements;
+	std::vector<OrderRequest> elements;
 
 public:
 	OrderQueue(void){}
 	~OrderQueue(void){}
 
-	void enqueue(T t)
+	void enqueue(OrderRequest request)
 	{
-		elements.push_back(t);
+		elements.push_back(request);
 	}
 
-	T dequeue()
+	OrderRequest dequeue()
 	{
-		T t = elements.front();
+		OrderRequest t = elements.front();
 		elements.erase(elements.begin());
 		return t;
 	}

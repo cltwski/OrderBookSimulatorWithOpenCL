@@ -24,6 +24,7 @@ private:
 protected:
 	static int getNextOrderNumber();
 	const char* OrderTypeToString(OrderType type);
+	OrderType StringToOrderType(std::string text);
 
 public:
 	Order(){}
@@ -32,6 +33,8 @@ public:
 
 	void print();
 	std::string toString();
+	static std::string toStringHeaderCSV();
+	std::string toStringCSV();
 	bool equals(Order* order);
 	static bool compareBuys(Order order1, Order order2);
 	static bool compareSells(Order order1, Order order2);

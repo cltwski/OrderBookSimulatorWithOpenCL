@@ -175,10 +175,10 @@ TraderCL Copy(TraderCL traderCL)
 	return tcl;
 }
 
-TraderCL RandomTrader(TraderCL traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
+void RandomTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
 {
     uint roll = MWC64X_NextUint(rng);	
-	TraderCL tcl = Copy(traderCL);
+	TraderCL tcl = *traderCL;
     
     //Create a buy order
     if (roll > UINTMAX/RT_BUYSELL_THRESH)
@@ -209,23 +209,37 @@ TraderCL RandomTrader(TraderCL traderCL, const MarketDataSmallCL data, mwc64x_st
     //Update trader with this info
     tcl.cashPosWO -= tcl.volume*tcl.price;
     tcl.volPosWO += tcl.volume;
-    return tcl;
+	*traderCL = tcl;
+    //return tcl;
 }
 
-TraderCL LargeRandomTrader(TraderCL traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
+void LargeRandomTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
 {
-    TraderCL tcl = Copy(traderCL);
+    TraderCL tcl = *traderCL;
     tcl.isMarket = true;
     
     if (data.buyVolume > data.sellVolume)
     {
+		bool isMarket = false;
+		if (MWC64X_NextUint(rng) > UINTMAX/RT_MARKET_THRESH)
+			isMarket = true;
+
+		//Fill order
+		tcl.isMarket = isMarket;
         tcl.volume = -data.buyVolume;
-        tcl.price = data.lastPrice;
+        //tcl.price = data.lastPrice;
+		tcl.price = data.lastPrice + (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
     }
     else if (data.buyVolume < data.sellVolume)
     {
+		bool isMarket = false;
+		if (MWC64X_NextUint(rng) > UINTMAX/RT_MARKET_THRESH)
+			isMarket = true;
+
+		tcl.isMarket = isMarket;
         tcl.volume = data.sellVolume;
-        tcl.price = data.lastPrice;
+        //tcl.price = data.lastPrice;
+		tcl.price = data.lastPrice - (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
     }
     else
     {
@@ -235,16 +249,17 @@ TraderCL LargeRandomTrader(TraderCL traderCL, const MarketDataSmallCL data, mwc6
     
     tcl.cashPosWO -= tcl.volume*tcl.price;
     tcl.volPosWO += tcl.volume;
-    return tcl;
+    //return tcl;
+	*traderCL = tcl;
 }
 
 //#define PT_SELL_THRESH
 //#define PT_BUY_THRESH
 //#define PT_BOUNDS
 
-TraderCL PositionTrader(TraderCL traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
+void PositionTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, mwc64x_state_t* rng)
 {
-    TraderCL tcl = Copy(traderCL);
+    TraderCL tcl = *traderCL;
     
     if (tcl.cashPos < tcl.startCash/PT_BOUNDS)
     {
@@ -261,25 +276,25 @@ TraderCL PositionTrader(TraderCL traderCL, const MarketDataSmallCL data, mwc64x_
     else if (tcl.cashPos < tcl.startCash && tcl.cashPos >= tcl.startCash/PT_BOUNDS)
     {
         tcl.volume = -ceil((double)tcl.volPos/PT_SELL_THRESH);
-        tcl.price = data.lastPrice + 0.05;
+        tcl.price = data.lastPrice + (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
 		tcl.isMarket = false;
     }
 	else if (tcl.cashPos > tcl.startCash && tcl.cashPos <= tcl.startCash*PT_BOUNDS)
 	{
-		tcl.volPos = floor((double)tcl.cashPos * data.lastPrice/PT_BUY_THRESH);
-		tcl.price = data.lastPrice - 0.05;
+		tcl.volume = floor((double)tcl.cashPos * data.lastPrice/PT_BUY_THRESH);
+		tcl.price = data.lastPrice - (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
 		tcl.isMarket = false;
 	}
 	else if (tcl.cashPosWO <= 0)
 	{
 		tcl.volume = -ceil((double)tcl.volPos/PT_SELL_THRESH);
-		tcl.price = data.lastPrice + 0.05;
+		tcl.price = data.lastPrice + (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
 		tcl.isMarket = false;
 	}
 	else if (tcl.volPosWO <= 0)
 	{
-		tcl.volPos = floor((double)tcl.cashPos * data.lastPrice/PT_BUY_THRESH);
-		tcl.price = data.lastPrice + 0.05;
+		tcl.volume = 10;//floor((double)tcl.cashPos * data.lastPrice/PT_BUY_THRESH);
+		tcl.price = data.lastPrice + (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
 		tcl.isMarket = false;
 	}
 	else
@@ -291,7 +306,8 @@ TraderCL PositionTrader(TraderCL traderCL, const MarketDataSmallCL data, mwc64x_
 
     tcl.cashPosWO -= tcl.volume*tcl.price;
     tcl.volPosWO += tcl.volume;
-    return tcl;
+    //return tcl;
+	*traderCL = tcl;
 }
 
 bool checkLongTermRise(__constant PastPrice* prices, int n)
@@ -367,30 +383,33 @@ bool checkShortTermRise(__constant PastPrice* prices, int n)
 
 //#define MT_SIZE_THRESH
 
-TraderCL MomentumTrader(TraderCL traderCL, const MarketDataSmallCL data, bool ltr, bool str, mwc64x_state_t* rng)
+void MomentumTrader(__global TraderCL* traderCL, const MarketDataSmallCL data, bool ltr, bool str, mwc64x_state_t* rng)
 {
     bool longTermRise = ltr;
     bool shortTermRise = str;
     
-    TraderCL tcl = Copy(traderCL);
+    TraderCL tcl = *traderCL;
+	tcl.isMarket = true;
     
     if (longTermRise)
     {
         if (shortTermRise)
         {
-            tcl.volume = 0;
+            tcl.volume = -80;
+			tcl.price = data.lastPrice;
         }
         else
         {
             if (tcl.volPos > MT_SIZE_THRESH)
             {
                 tcl.volume = -floor((double)tcl.volPos/MT_SIZE_THRESH);
-                tcl.price = data.lastPrice - 0.01;
+                tcl.price = data.lastPrice - (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
                 tcl.isMarket = false;
             }
             else
             {
-                tcl.volume = 0;
+                tcl.volume = -80;
+				tcl.price = data.lastPrice;
             }
         }
     }
@@ -401,23 +420,26 @@ TraderCL MomentumTrader(TraderCL traderCL, const MarketDataSmallCL data, bool lt
             if (tcl.cashPos > (MT_SIZE_THRESH*data.lastPrice))
             {
                 tcl.volume = floor((double)tcl.volPos/MT_SIZE_THRESH);
-                tcl.price = data.lastPrice + 0.01;
+                tcl.price = data.lastPrice + (RT_PRICE_CHANGE*floor((double)MWC64X_NextUint(rng)*RT_PRICE_SIZE/UINTMAX));
                 tcl.isMarket = false;
             }
             else
             {
-                tcl.volume = 0;
+                tcl.volume = 80;
+				tcl.price = data.lastPrice;
             }
         }
         else
         {
-            tcl.volume = 0;
+            tcl.volume = 80;
+			tcl.price = data.lastPrice;
         }
     }
     
     tcl.cashPosWO -= tcl.volume*tcl.price;
     tcl.volPosWO += tcl.volume;
-	return tcl;
+	//return tcl;
+	*traderCL = tcl;
 }
     
 
@@ -438,17 +460,15 @@ __kernel void ProcessTraders(ulong offset, __global TraderCL* traders, __constan
     {
         mwc64x_state_t rng;
         MWC64X_SeedStreams(&rng, offset, perStream);
-        
-		TraderCL tcl = tradersDest[i];
 
         if (tradersDest[i].type == 0)
-            tradersDest[i] = RandomTrader(tcl, data, &rng);
+            RandomTrader(&tradersDest[i], data, &rng);
         else if (tradersDest[i].type == 1)
-            tradersDest[i] = LargeRandomTrader(tcl, data, &rng);
+            LargeRandomTrader(&tradersDest[i], data, &rng);
         else if (tradersDest[i].type == 2)
-            tradersDest[i] = PositionTrader(tcl, data, &rng);
+            PositionTrader(&tradersDest[i], data, &rng);
         else if (tradersDest[i].type == 3)
-            tradersDest[i] = MomentumTrader(tcl, data, ltr, str, &rng);
+            MomentumTrader(&tradersDest[i], data, ltr, str, &rng);
     }
 }
 

@@ -2,16 +2,9 @@
 #include "OrderRequest.h"
 
 
-OrderRequest::OrderRequest(Order* order, bool isInserting)
+OrderRequest::OrderRequest(Order order, bool isInserting)
 {
-	try
-	{
-		_order = order;
-	}
-	catch (std::exception exception)
-	{
-		std::cout << exception.what() << std::endl;
-	}
+	_order = order;
 	_isInsertRequest = isInserting;
 }
 
@@ -30,7 +23,7 @@ bool OrderRequest::isRemove()
 
 Order OrderRequest::getOrder()
 {
-	return (*_order);
+	return _order;
 }
 
 std::string OrderRequest::ToString()
@@ -41,5 +34,5 @@ std::string OrderRequest::ToString()
 	else if (this->isRemove())
 		temp = "Remove ";
 
-	return temp + _order->toString();
+	return temp + _order.toString();
 }

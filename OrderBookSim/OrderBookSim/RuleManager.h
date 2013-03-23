@@ -12,7 +12,6 @@ class RuleManager
 private:
 	std::list<IRule*> _rules;
 
-	Logger* _logger;
 	static const std::string logName;
 
 public:

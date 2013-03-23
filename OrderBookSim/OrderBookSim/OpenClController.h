@@ -17,16 +17,17 @@ private:
 	TraderCLArray _tradersBuffer;
 	MarketDataCL _data;
 	static const std::string logName;
+	std::string _kernelText;
 
 	bool _profiling;
-	Logger* _logger;
 
 	static bool _instanceFlag;
 	static OpenClController* _instance;
 	OpenClController();
+  ~OpenClController();
 public:
 	static OpenClController* GetInstance();
-	~OpenClController();
+	
 
 	void RefreshBuffers(TraderCLArray tb, MarketDataCL data);
 	void SetupFirstTime(TraderCLArray tradersBuffer, std::string kernelName, int rtCount, int lrtCount, int ptCount, int mtCount, bool profiling = false);

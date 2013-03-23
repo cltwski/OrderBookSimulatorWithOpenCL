@@ -23,6 +23,14 @@ Stock::Stock(int id, std::string symbol, double lastPrice)
 Stock::~Stock(void)
 {}
 
+bool Stock::operator==(Stock stock)
+{
+	if (stock.getLastPrice() == _lastPrice && stock.getStockId() == _stockId && stock.getSymbol() == _symbol)
+		return true;
+	else
+		return false;
+}
+
 std::string Stock::getSymbol()
 {
 	return _symbol;
@@ -40,12 +48,14 @@ std::string Stock::toString()
 	if (_symbol == "0")
 	{
 		sprintf_s(str, "ID: %d", _stockId);
-		return str;
+		std::string temp(str);
+		return temp;
 	}
 	else
 	{
-		sprintf_s(str, "ID: %d, Symbol: %s", _stockId, _symbol.c_str());
-		return str;
+		sprintf_s(str, "%d,%s", _stockId, _symbol.c_str());
+		std::string temp(str);
+		return temp;
 	}
 }
 

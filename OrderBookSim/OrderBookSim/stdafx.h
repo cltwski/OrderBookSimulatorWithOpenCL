@@ -23,12 +23,15 @@
 #include <Windows.h>
 #include <exception>
 #include <cassert>
+#include <stdlib.h>
 
 #define __CL_ENABLE_EXCEPTIONS
 #define __NO_STD_VECTOR
 #include <CL\cl.hpp>
 
-#define LOGLEVEL 0
+#define LOGLEVEL 1
+
+#include <tbb\tbb.h>
 
 
 

@@ -2,6 +2,8 @@
 #include "Trader.h"
 
 int Trader::_lastId = -1;
+const std::string Trader::_tradesFileName = "Trades.csv";
+const std::string Trader::_completedOrdersFileName = "Orders.csv";
 
 Trader::Trader()
 {
@@ -13,6 +15,55 @@ Trader::Trader()
 	_cashPosWOrders = 0.0;
 	_startCash = 0.0;
 	_startVolume = 0;
+	logName = "Trader" + Utils::ItoS(_id);
+
+	std::stringstream dir1;
+	dir1 << Logger::GetInstance()->GetDirectory() << "Traders\\";
+	std::wstring ws1 = Utils::s2ws(dir1.str());
+	CreateDirectory(ws1.c_str(), NULL);
+	dir1 << "Trader" << _id << "\\";
+	ws1 = Utils::s2ws(dir1.str());
+	CreateDirectory(ws1.c_str(), NULL);
+	_directory = dir1.str();
+
+	_trades.open(_directory + _tradesFileName);
+	this->WriteTradeToFile(Trade::toStringHeaderCSV());
+	_completedOrders.open(_directory + _completedOrdersFileName);
+	this->WriteCompletedOrderToFile(Order::toStringHeaderCSV());
+}
+
+Trader::Trader(Trader& trader)
+{
+	_id = trader.GetId();
+	_currentT = trader.GetCurrentT();
+	_processT = trader.GetProcessT();
+	_lastCompleteT = trader.GetLastCompleteT();
+	_cashPosition = trader.GetCashPos();
+	_cashPosWOrders = trader.GetCashPosWO();
+	_startCash = trader.GetStartCash();
+	_startVolume = trader.GetStartVol();
+	_type = trader.GetType();
+	_pendingOrders = trader.GetPendingOrders();
+	_completedOrdersV = trader.GetCompletedOrders();
+	_tradesV = trader.GetTrades();
+	_stockPositions = trader.GetStockPositions();
+	_stockPosWOrders = trader.GetStockPosWO();
+	logName = "Trader" + Utils::ItoS(_id);
+
+	std::stringstream dir1;
+	dir1 << Logger::GetInstance()->GetDirectory() << "Traders\\";
+	std::wstring ws1 = Utils::s2ws(dir1.str());
+	CreateDirectory(ws1.c_str(), NULL);
+	dir1 << "Trader" << _id << "\\";
+	ws1 = Utils::s2ws(dir1.str());
+	CreateDirectory(ws1.c_str(), NULL);
+	_directory = dir1.str();
+
+	_trades.open(_directory + _tradesFileName);
+	this->WriteTradeToFile(Trade::toStringHeaderCSV());
+	_completedOrders.open(_directory + _completedOrdersFileName);
+	this->WriteCompletedOrderToFile(Order::toStringHeaderCSV());
+
 }
 
 Trader::Trader(Stock* stock, int volume, double cash, int processTime, TraderType type)
@@ -30,10 +81,30 @@ Trader::Trader(Stock* stock, int volume, double cash, int processTime, TraderTyp
 	_stockPosWOrders.insert(std::make_pair(stock->getSymbol(), volume));
 
 	_type = type;
+
+	logName = "Trader" + Utils::ItoS(_id);
+	//_logger = Logger::GetInstance(LOGLEVEL);
+
+	std::stringstream dir1;
+	dir1 << Logger::GetInstance()->GetDirectory() << "Traders\\";
+	std::wstring ws1 = Utils::s2ws(dir1.str());
+	CreateDirectory(ws1.c_str(), NULL);
+	dir1 << "Trader" << _id << "\\";
+	ws1 = Utils::s2ws(dir1.str());
+	CreateDirectory(ws1.c_str(), NULL);
+	_directory = dir1.str();
+
+	_trades.open(_directory + _tradesFileName);
+	this->WriteTradeToFile(Trade::toStringHeaderCSV());
+	_completedOrders.open(_directory + _completedOrdersFileName);
+	this->WriteCompletedOrderToFile(Order::toStringHeaderCSV());
 }
 
 Trader::~Trader()
-{}
+{
+  _trades.close();
+  _completedOrders.close();
+}
 
 void Trader::update(int time)
 {
@@ -47,21 +118,23 @@ void Trader::notify(Trade* trade)
 		updateCashPos(- (trade->getPrice() * trade->getSize()));
 		updateStockPosition(&trade->getBuyOrder().getStock(), trade->getSize());
 		completedPendingOrder(trade->getBuyOrder());
-		_trades.push_back(*trade);
+		_tradesV.push_back(*trade);
+		this->WriteTradeToFile(trade->toStringCSV());
 	}
 	else if (trade->getSellOrder().getParticipant() == _id)
 	{
 		updateCashPos( (trade->getPrice() * trade->getSize()));
 		updateStockPosition(&trade->getSellOrder().getStock(), -trade->getSize());
 		completedPendingOrder(trade->getSellOrder());
-		_trades.push_back(*trade);
+		_tradesV.push_back(*trade);
+		this->WriteTradeToFile(trade->toStringCSV());
 	}
 }
 
 std::string Trader::toString()
 {
 	std::stringstream tempSS;
-	char str[128];
+	char str[256];
 	sprintf_s(str, "Trader[%d]: Cash[$%.2f], PositionCash[$%.2f], ", _id, _cashPosition, _cashPosWOrders);
 	tempSS << str;
 
@@ -84,22 +157,78 @@ std::string Trader::toString(std::string symbol)
 {
 	char str[128];
 	sprintf_s(str, "Trader[%d]: Cash[$%.2f], PositionCash[$%.2f], Holding:%s[%d], PositionHolding:%s[%d]", _id, _cashPosition, _cashPosWOrders, symbol, _stockPositions[symbol], symbol, _stockPosWOrders[symbol]);
-	return std::string(str);
+	std::string temp(str);
+	return temp;
 }
 
-int Trader::getId()
+int Trader::GetId()
 {
 	return _id;
 }
 
-int Trader::getProcessTime()
+int Trader::GetCurrentT()
+{
+	return _currentT;
+}
+
+int Trader::GetProcessT()
 {
 	return _processT;
 }
 
-TraderType Trader::getType()
+int Trader::GetLastCompleteT()
+{
+	return _lastCompleteT;
+}
+
+double Trader::GetCashPos()
+{
+	return _cashPosition;
+}
+
+double Trader::GetCashPosWO()
+{
+	return _cashPosWOrders;
+}
+
+double Trader::GetStartCash()
+{
+	return _startCash;
+}
+
+int Trader::GetStartVol()
+{
+	return _startVolume;
+}
+
+TraderType Trader::GetType()
 {
 	return _type;
+}
+
+std::list<Order> Trader::GetPendingOrders()
+{
+	return _pendingOrders;
+}
+
+std::list<Order> Trader::GetCompletedOrders()
+{
+	return _completedOrdersV;
+}
+
+std::vector<Trade> Trader::GetTrades()
+{
+	return _tradesV;
+}
+
+std::map<std::string, int> Trader::GetStockPositions()
+{
+	return _stockPositions;
+}
+
+std::map<std::string, int> Trader::GetStockPosWO()
+{
+	return _stockPosWOrders;
 }
 
 //Protected:
@@ -133,7 +262,8 @@ void Trader::removePendingOrder(Order order)
 void Trader::completedPendingOrder(Order order)
 {
 	_pendingOrders.remove(order);
-	_completedOrders.push_back(order);
+	this->WriteCompletedOrderToFile(order.toStringCSV());
+	_completedOrdersV.push_back(order);
 }
 
 void Trader::addStockPosition(Stock* stock, int volume)
@@ -184,11 +314,11 @@ void Trader::processTraderCL(TraderCL tcl, OrderBook* book)
 		//Submit order
 		if (tcl.volume < 0)	//Sell Order
 		{
-			book->submitOrder(new Order(SELL, -tcl.volume, tcl.price, tcl.id, tcl.isMarket, book->getStock(), _currentT));
+			book->submitOrder(Order(SELL, -tcl.volume, tcl.price, tcl.id, tcl.isMarket, book->getStock(), _currentT));
 		}
 		else if (tcl.volume > 0) //Buy Order
 		{
-			book->submitOrder(new Order(BUY, tcl.volume, tcl.price, tcl.id, tcl.isMarket, book->getStock(), _currentT));
+			book->submitOrder(Order(BUY, tcl.volume, tcl.price, tcl.id, tcl.isMarket, book->getStock(), _currentT));
 		}
 
 		//Update the positions
@@ -198,5 +328,32 @@ void Trader::processTraderCL(TraderCL tcl, OrderBook* book)
 		_stockPosWOrders[book->getStock()->getSymbol()] = tcl.volPosWO;
 
 		_lastCompleteT = _currentT;
+
+		Logger::GetInstance()->Info(logName, Utils::Merge("Updated Trader:", this->toString()));
 	}
+}
+
+size_t Trader::SizeOf()
+{
+	size_t result = 0;
+	result += sizeof(Trader);
+	//result += sizeof(Order)*(_pendingOrders.size() + _completedOrders.size());
+	//result += sizeof(Trade*)*_trades.capacity();
+	result += sizeof(std::map<std::string,int>)*(_stockPositions.size() + _stockPosWOrders.size());
+	return result;
+}
+
+void Trader::WriteCompletedOrderToFile(std::string text)
+{
+	_completedOrders << text << std::endl;
+}
+
+void Trader::WriteTradeToFile(std::string text)
+{
+	_trades << text << std::endl;
+}
+
+double Trader::GetProfit()
+{
+	return _cashPosition - _startCash;
 }

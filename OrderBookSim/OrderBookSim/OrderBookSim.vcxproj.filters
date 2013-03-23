@@ -66,9 +66,6 @@
     <ClInclude Include="IRule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ITrader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LimitLimitRule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -112,6 +109,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumTraderType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TBBlog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

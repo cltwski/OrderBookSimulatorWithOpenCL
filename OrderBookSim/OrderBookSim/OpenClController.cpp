@@ -21,12 +21,23 @@ OpenClController::OpenClController()
 
 	_devices = _context.getInfo<CL_CONTEXT_DEVICES>();
 
-	_logger = Logger::GetInstance(LOGLEVEL);
+	//_logger = Logger::GetInstance(LOGLEVEL);
+	std::ifstream file("Traders.cl");
+	std::string prog(std::istreambuf_iterator<char>(file), (std::istreambuf_iterator<char>()));
+	_kernelText = prog;
+	file.close();
 }
 
 
 OpenClController::~OpenClController()
-{}
+{
+	if (_instanceFlag)
+	{
+		_instanceFlag = false;
+		delete _instance;
+		_instance = NULL;
+	}
+}
 
 OpenClController* OpenClController::GetInstance()
 {
@@ -44,10 +55,10 @@ OpenClController* OpenClController::GetInstance()
 
 void OpenClController::RefreshBuffers(TraderCLArray tb, MarketDataCL data)
 {
-	_logger->Debug(logName, "Refreshing Traders and Market Data Buffers");
+	Logger::GetInstance()->Debug(logName, "Refreshing Traders and Market Data Buffers");
 	_tradersBuffer = tb;
 	_data = data;
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OpenClController::SetupFirstTime(TraderCLArray tradersBuffer, std::string kernelName, int rtCount, int lrtCount, int ptCount, int mtCount, bool profiling)
@@ -62,90 +73,118 @@ void OpenClController::SetupFirstTime(TraderCLArray tradersBuffer, std::string k
 
 	_device = new OpenClDevice(_context, _devices, "Traders.cl", _profiling);
 
-	_logger->Debug(logName, "Setting up Build Options");
+	Logger::GetInstance()->Debug(logName, "Setting up Build Options");
 	_device->SetupBuildOptions(rtCount, lrtCount, ptCount, mtCount);
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 
-	_logger->Debug(logName, "Building Kernel");
+	Logger::GetInstance()->Debug(logName, "Building Kernel");
 	try
 	{
-		_device->BuildKernel(kernelName);
+		_device->BuildKernel(kernelName, _kernelText);
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed in SetupFirstTime", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in SetupFirstTime:BuildKernel - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OpenClController::UpdateBuffersAndArgs()
 {
-	_logger->Debug(logName, "Setting up Buffers");
+	Logger::GetInstance()->Debug(logName, "Setting up Buffers");
 	try
 	{
 		_device->SetupBuffers(_tradersBuffer, _data);
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed in UpdateBuffersAndArgs", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in UpdateBuffersAndArgs:SetupBuffer - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 
-	_logger->Debug(logName, "Setting up Args");
+	Logger::GetInstance()->Debug(logName, "Setting up Args");
 	try
 	{
 		_device->SetupKernelArgs();
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed in UpdateBufferAndArgs", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in UpdateBuffersAndArgs:SetupKernelArgs - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 double OpenClController::Run(cl::NDRange globalRange, cl::NDRange localRange)
 {
 	cl::Event finishEvent;
-	_logger->Debug(logName, "Enqueueing Buffers");
+	Logger::GetInstance()->Debug(logName, "Enqueueing Buffers");
 	try
 	{
 		_device->EnqueueWriteBuffers(_queue);
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed in Run", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in Run:EnqueueWriteBuffers - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 
-	_logger->Debug(logName, "Enqueueing Kernel");
-	_queue.enqueueNDRangeKernel(_device->GetKernel(), cl::NullRange, globalRange, localRange, NULL, &finishEvent);
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "Enqueueing Kernel");
+	try
+	{
+		_queue.enqueueNDRangeKernel(_device->GetKernel(), cl::NullRange, globalRange, localRange, NULL, &finishEvent);
+	}
+	catch (...)
+	{
+		std::stringstream temp1; temp1 << "Failed in Run:EnqueueNDRangeKernel - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
+	Logger::GetInstance()->Debug(logName, "DONE");
 
-	_logger->Debug(logName, "Enqueueing Read of Buffers");
+	Logger::GetInstance()->Debug(logName, "Enqueueing Read of Buffers");
 	double time;
 	try
 	{
 		time = _device->EnqueueRead(_queue, finishEvent);
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed in Run", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in Run:EnqueueRead - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
+
+	try
+	{
+		_queue.flush();
+		_queue.finish();
+	}
+	catch (...)
+	{
+		std::stringstream temp1; temp1 << "Failed in Run:Flush/Finish - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
 
 	std::stringstream temp;
 	temp << "Kernel Executed in time: " << time << "ms";
-	_logger->Info(logName, temp.str());
+	Logger::GetInstance()->Info(logName, temp.str());
 	return time;
 }
 

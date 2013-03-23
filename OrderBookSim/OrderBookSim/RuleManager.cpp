@@ -4,9 +4,7 @@
 const std::string RuleManager::logName = "RuleManager";
 
 RuleManager::RuleManager(void)
-{
-	_logger = Logger::GetInstance(LOGLEVEL);
-}
+{}
 
 RuleManager::~RuleManager(void)
 {}
@@ -14,18 +12,18 @@ RuleManager::~RuleManager(void)
 void RuleManager::addRule(IRule* rule)
 {
 	_rules.push_back(rule);
-	_logger->Debug(logName, Utils::Merge("Added rule:", rule->ToString()));
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Added rule:", rule->ToString()));
 }
 
 void RuleManager::removeRule(IRule* rule)
 {
 	_rules.remove(rule);
-	_logger->Debug(logName, Utils::Merge("Removed rule:", rule->ToString()));
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Removed rule:", rule->ToString()));
 }
 
 void RuleManager::applyRules(OrderBook* orderBook, Order* order)
 {
-	_logger->Debug(logName, "Applying Rules");
+	Logger::GetInstance()->Debug(logName, "Applying Rules");
 
 	std::list<IRule*>::iterator& ruleIt = _rules.begin();
 
@@ -33,7 +31,7 @@ void RuleManager::applyRules(OrderBook* orderBook, Order* order)
 	{
 		IRule* rule = (*ruleIt);
 
-		_logger->Debug(logName, Utils::Merge("Applying Rule:", rule->ToString()));
+		Logger::GetInstance()->Debug(logName, Utils::Merge("Applying Rule:", rule->ToString()));
 		while (rule->fitsCriteria(orderBook, order))
 		{
 			Trade* trade = rule->processRule(orderBook, order);
@@ -51,5 +49,5 @@ void RuleManager::applyRules(OrderBook* orderBook, Order* order)
 			break;
 	}
 
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }

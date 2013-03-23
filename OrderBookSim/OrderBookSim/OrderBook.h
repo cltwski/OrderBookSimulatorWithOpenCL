@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "Trade.h"
 #include "Stock.h"
 #include "Order.h"
@@ -12,11 +11,13 @@
 #include "OpenClStructs.h"
 #include "Logger.h"
 #include "Utils.h"
+#include "Trader.h"
+#include "TBBlog.h"
 
 class TraderManager;
 class RuleManager;
 class IRule;
-class ITrader;
+class Trader;
 class WallTimer;
 
 class OrderBook
@@ -26,9 +27,10 @@ private:
 	std::list<Order> _buyOrders;
 	std::list<Order> _sellOrders;
 	std::vector<Trade> _trades;
-	OrderQueue<OrderRequest*> queue;
+	OrderQueue queue;
 	double _lastPrice;
 	std::vector<PastPrice> _prices;
+	std::vector<double> _allPrices;
 	double _openPrice;
 	double _threshold;
 	RuleManager* _ruleManager;
@@ -37,22 +39,26 @@ private:
 
 	bool _performanceAnalytics;
 	WallTimer* _timer;
-	double* _matchTime;
-	double* _traderProcTime;
-	double _aveMatchTime, _maxMatchTime;
-	double _aveTraderProcTime, _maxTraderProcTime;
-	double _aveOclProcTime, _maxOclProcTime;
+	double _matchTime;
+	double _traderProcTime;
+	std::vector<double> _matchTimes;
+	std::vector<double> _traderProcTimes;
+	std::vector<double> _oclProcTimes;
+	size_t _tradesSize;
+	size_t _ordersSize;
+	std::vector<double> _pastReturns;
+	std::vector<double> _spreads;
 
 	//Helpers for Traders
 	int _buyMarketOrders, _buyLimitOrders;
 	int _sellMarketOrders, _sellLimitOrders;
 	int _buyVolume, _sellVolume;
 
-	Logger* _logger;
 	static const std::string logName;
 
 	Order* getOrderPtr(Order order);
 	Order* getOrderPtr(int id);
+	Order GetOrder(int id);
 	Trade* getTradePtr(Trade trade);
 
 	void notifyTraders(Trade* trade);
@@ -67,15 +73,15 @@ public:
 	void printTrades();
 	void printBrief();
 
-	void registerTrader(ITrader* trader);
-	void unRegisterTrader(ITrader* trader);
+	void registerTrader(Trader* trader);
+	void unRegisterTrader(Trader* trader);
 
 	void processTraders();
 
 	void addRule(IRule* rule);
 	void removeRule(IRule* rule);
 
-	void submitOrder(Order* order);
+	void submitOrder(Order order);
 	void deSubmitOrder(int orderId);
 
 	void addOrder(Order order);
@@ -122,5 +128,43 @@ public:
 	int GetSellLimitCount();
 	int getBuyVolume();
 	int getSellVolume();
+	TraderManager* GetTraderManager();
+	
+	double GetAveMatchTime();
+	double GetMaxMatchTime();
+	double GetAveTraderProcTime();
+	double GetMaxTraderProcTime();
+	double GetAveOclProcTime();
+	double GetMaxOclProcTime();
+	size_t GetBookSize();
+	double GetBid();
+	double GetCall();
+	double GetSpread();
+	double GetMinPrice();
+	double GetAvePrice();
+	double GetMaxPrice();
+	double GetTradesPerSecond();
+	double GetMinReturns1ms();
+	double GetAveReturns1ms();
+	double GetMaxReturns1ms();
+	double GetMinReturns1s();
+	double GetAveReturns1s();
+	double GetMaxReturns1s();
+	double GetReturn1m();
+	double GetMinRTProfit();
+	double GetAveRTProfit();
+	double GetMaxRTProfit();
+	double GetMinLRTProfit();
+	double GetAveLRTProfit();
+	double GetMaxLRTProfit();
+	double GetMinPTProfit();
+	double GetAvePTProfit();
+	double GetMaxPTProfit();
+	double GetMinMTProfit();
+	double GetAveMTProfit();
+	double GetMaxMTProfit();
+	double GetAveProfit();
+	double GetVolatilityPerMin();
+	double GetAveSpread();
 };
 

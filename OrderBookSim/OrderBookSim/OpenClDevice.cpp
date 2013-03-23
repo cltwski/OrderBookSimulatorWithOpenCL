@@ -10,8 +10,6 @@ OpenClDevice::OpenClDevice(cl::Context& context, cl::vector<cl::Device>& devices
 	_kernelFile = kernelFile;
 	_profiling = profiling;
 	srand(time(0));
-	
-	_logger = Logger::GetInstance(LOGLEVEL);
 }
 
 
@@ -34,7 +32,7 @@ void OpenClDevice::SetupBuildOptions(int rtCount, int lrtCount, int ptCount, int
 		_buildOptions += std::string(buf);
 		std::stringstream temp;
 		temp << "Added " << std::string(buf) << " to build options";
-		_logger->Debug(logName, temp.str());
+		Logger::GetInstance()->Debug(logName, temp.str());
 	}
 	if (lrtCount > -1)
 	{
@@ -43,69 +41,89 @@ void OpenClDevice::SetupBuildOptions(int rtCount, int lrtCount, int ptCount, int
 		_buildOptions += std::string(buf);
 		std::stringstream temp;
 		temp << "Added " << std::string(buf) << " to build options";
-		_logger->Debug(logName, temp.str());
+		Logger::GetInstance()->Debug(logName, temp.str());
 	}
 	if (ptCount > -1)
 	{
 		char buf[128];
-		sprintf_s(buf, "-D PT_SELL_THRESH=10 -D PT_BUY_THRESH=8 -D PT_BOUNDS=3 -D PT_COUNT=%d ", ptCount);
+		sprintf_s(buf, "-D PT_SELL_THRESH=100 -D PT_BUY_THRESH=100 -D PT_BOUNDS=10 -D PT_COUNT=%d ", ptCount);
 		_buildOptions += std::string(buf);
 		std::stringstream temp;
 		temp << "Added " << std::string(buf) << " to build options";
-		_logger->Debug(logName, temp.str());
+		Logger::GetInstance()->Debug(logName, temp.str());
 	}
 	if (mtCount > -1)
 	{
 		char buf[128];
-		sprintf_s(buf, "-D MT_SIZE_THRESH=10 -D MT_SHORT_RANGE=10 -D MT_COUNT=%d ", mtCount);
+		sprintf_s(buf, "-D MT_SIZE_THRESH=100 -D MT_SHORT_RANGE=10 -D MT_COUNT=%d ", mtCount);
 		_buildOptions += std::string(buf);
 		std::stringstream temp;
 		temp << "Added " << std::string(buf) << " to build options";
-		_logger->Debug(logName, temp.str());
+		Logger::GetInstance()->Debug(logName, temp.str());
 	}
 
 	std::stringstream temp;
 	temp << "Build Options are: " << _buildOptions;
-	_logger->Info(logName, temp.str());
+	Logger::GetInstance()->Info(logName, temp.str());
 }
 
-void OpenClDevice::BuildKernel(std::string kernelName)
+void OpenClDevice::BuildKernel(std::string kernelName, std::string kernelText)
 {
 	_kernelName = kernelName;
 
 	//Setup the program
 	std::stringstream tempSS;
 	tempSS << "Building file: " << _kernelFile;
-	_logger->Debug(logName, tempSS.str());
+	Logger::GetInstance()->Debug(logName, tempSS.str());
 	tempSS.clear();
 
-	std::ifstream file(_kernelFile);
-	std::string prog(std::istreambuf_iterator<char>(file), (std::istreambuf_iterator<char>()));
-	cl::Program::Sources source(1, std::make_pair(prog.c_str(), prog.length()+1));
-	cl::Program program(_context, source);
-	file.close();
+	cl::Program program;
+	try
+	{
+		assert(kernelText != "");
+		cl::Program::Sources source(1, std::make_pair(kernelText.c_str(), kernelText.length()+1));
+		program = cl::Program(_context, source);
+	}
+	catch (...)
+	{
+		std::stringstream temp1; temp1 << "Failed in BuildKernel:assert(kernelText) - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
 
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 
 
 	//build the program
 	try
 	{
-		_logger->Debug(logName, "Compiling...");
+		Logger::GetInstance()->Debug(logName, "Compiling...");
 		program.build(_devices, _buildOptions.c_str());
-		_logger->Debug(logName, "DONE");
+		Logger::GetInstance()->Debug(logName, "DONE");
 	}
-	catch (cl::Error& error)
+	catch (...)
 	{
-		tempSS << "Build failed! " << error.what() << "(" << clErr(error.err()) << ")" << std::endl;
-		tempSS << "Retrieving log..." << std::endl;
-		tempSS << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_devices[0]) << std::endl;
-		_logger->Error(logName, tempSS.str());
-		std::string temp = Utils::Merge("Failed in Build Kernel", error.what());
-		throw new std::exception(temp.c_str());
+		std::stringstream temp1; temp1 << "Failed in BuildKernel:program.build - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		std::stringstream temp2; temp2 << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_devices[0]) << std::endl;
+		Logger::GetInstance()->Error(logName, temp2.str());
+		std::string temp3 = Utils::Merge(temp, temp2.str());
+		throw new std::exception(temp3.c_str());
 	}
 
-	_kernel = cl::Kernel(program, _kernelName.c_str());
+	try
+	{
+		_kernel = cl::Kernel(program, _kernelName.c_str());
+	}
+	catch (...)
+	{
+		std::stringstream temp1; temp1 << "Failed in BuildKernel:cl::Kernel(program,_kernelName.c_str()) - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		throw new std::exception(temp.c_str());
+	}
 }
 
 void OpenClDevice::SetupBuffers(TraderCLArray tradersBuffer, MarketDataCL data)
@@ -119,10 +137,11 @@ void OpenClDevice::SetupBuffers(TraderCLArray tradersBuffer, MarketDataCL data)
 	{
 		Try(err);
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to setup traders buffer", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in SetupBuffers:_tradersBuffer - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 
@@ -131,10 +150,11 @@ void OpenClDevice::SetupBuffers(TraderCLArray tradersBuffer, MarketDataCL data)
 	{
 		Try(err);
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to setup market data buffer", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in SetupBuffers:_marketDataBuffer - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 }
@@ -145,10 +165,11 @@ void OpenClDevice::SetupKernelArgs()
 	{
 		Try(_kernel.setArg(0, (cl_ulong)rand()));
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to setup arg 0", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in SetupKernelArgs:Arg(0) - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 
@@ -156,10 +177,11 @@ void OpenClDevice::SetupKernelArgs()
 	{
 		Try(_kernel.setArg(1, _tradersBuffer));
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to setup arg 1", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in SetupKernelArgs:Arg(1) - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 
@@ -167,10 +189,11 @@ void OpenClDevice::SetupKernelArgs()
 	{
 		Try(_kernel.setArg(2, _marketDataBuffer));
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to setup arg 2", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in SetupKernelArgs:Arg(2) - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 
@@ -178,10 +201,11 @@ void OpenClDevice::SetupKernelArgs()
 	{
 		Try(_kernel.setArg(3, MarketDataSmallCL(_data.buyVolume, _data.sellVolume, _data.getLatestPrice().price, _data.numPastPrices)));
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to setup arg 3", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in SetupKernelArgs:Arg(3) - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 }
@@ -192,10 +216,11 @@ void OpenClDevice::EnqueueWriteBuffers(cl::CommandQueue& queue, cl::Event* write
 	{
 		Try(queue.enqueueWriteBuffer(_tradersBuffer, CL_TRUE, 0, _traders.number*sizeof(TraderCL), _traders.traders, NULL, writeEvent));
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to enqueue write buffers", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in EnqueueWriteBuffers:queue.enqueueWriteBuffer - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 }
@@ -218,10 +243,11 @@ double OpenClDevice::EnqueueRead(cl::CommandQueue& queue, cl::Event& finishEvent
 	{
 		Try(queue.enqueueReadBuffer(_tradersBuffer, CL_TRUE, NULL, _traders.number*sizeof(TraderCL), _traders.traders));
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::string temp = Utils::Merge("Failed to Enqueue Read Buffers", exception.what());
-		_logger->Error(logName, temp);
+		std::stringstream temp1; temp1 << "Failed in EnqueueRead:queue.enqueueReadBuffer - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
 		throw new std::exception(temp.c_str());
 	}
 	return time;

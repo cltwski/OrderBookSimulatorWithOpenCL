@@ -31,22 +31,22 @@ private:
 
 	//Other
 	bool _profiling;
-	Logger* _logger;
 	static const std::string logName;
 
 protected:
-	const char* clErr(cl_int err);
 	void Try(cl_int err);
 
 public:
 	OpenClDevice(cl::Context& context, cl::vector<cl::Device>& devices, const char* kernelFile, bool profiling);
 	~OpenClDevice(void);
 	void SetupBuildOptions(int rtCount, int lrtCount, int ptCount, int mtCount);
-	void BuildKernel(std::string kernelName);
+	void BuildKernel(std::string kernelName, std::string kernelText="");
 	void SetupBuffers(TraderCLArray tradersBuffer, MarketDataCL data);
 	void SetupKernelArgs();
 	void EnqueueWriteBuffers(cl::CommandQueue& queue, cl::Event* writeEvent = (cl::Event*)0);
 	double EnqueueRead(cl::CommandQueue& queue, cl::Event& finishEvent);
+
+	static const char* clErr(cl_int err);
 
 	cl::Kernel GetKernel();
 

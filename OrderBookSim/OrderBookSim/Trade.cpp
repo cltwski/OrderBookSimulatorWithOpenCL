@@ -35,9 +35,24 @@ Trade::~Trade(void)
 
 std::string Trade::toString()
 {
-	char str[128];
-	sprintf_s(str, "%d---Trade ID: %d, Price: %.2f, Volume: %d between ID:[%d] and ID:[%d]", _time, _tradeId, _price, _size, _buyOrder.getParticipant(), _sellOrder.getParticipant());
-	return str;
+	char str[256];
+	sprintf_s(str, "%d---Trade ID: %d, Price: %.2f, Volume: %d between ID:[%d] and ID:[%d]. Order Ids: Buy[%d], Sell[%d]", 
+		_time, _tradeId, _price, _size, _buyOrder.getParticipant(), _sellOrder.getParticipant(), _buyOrder.getOrderNumber(), _sellOrder.getOrderNumber());
+	std::string temp(str);
+	return temp;
+}
+
+std::string Trade::toStringCSV()
+{
+	char str[256];
+	sprintf_s(str, "%d,%d,%.2f,%d,%d,%d,%d,%d",
+		_time, _tradeId, _price, _size, _buyOrder.getParticipant(), _sellOrder.getParticipant(), _buyOrder.getOrderNumber(), _sellOrder.getOrderNumber());
+	return std::string(str);
+}
+
+std::string Trade::toStringHeaderCSV()
+{
+	return "Time,TradeId,Price,Volume,BuyId,SellId,BuyOrderId,SellOrderId";
 }
 
 void Trade::print()

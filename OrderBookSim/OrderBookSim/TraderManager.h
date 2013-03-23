@@ -1,25 +1,23 @@
 #pragma once
 
-#include "ITrader.h"
 #include "Trader.h"
 #include "OpenClController.h"
 #include "OpenClDevice.h"
 #include "OpenClStructs.h"
 
 
-class ITrader;
 class Trader;
 enum TraderType;
 
 class TraderManager
 {
 private:
-	std::vector<ITrader*> _randomTraders;
-	std::vector<ITrader*> _largeRandomTraders;
-	std::vector<ITrader*> _positionTraders;
-	std::vector<ITrader*> _momentumTraders;
+	std::vector<Trader*> _randomTraders;
+	std::vector<Trader*> _largeRandomTraders;
+	std::vector<Trader*> _positionTraders;
+	std::vector<Trader*> _momentumTraders;
 
-	std::vector<ITrader*> _allTraders;
+	std::vector<Trader*> _allTraders;
 	//TODO add more traders type
 	TraderCLArray _tradersBuffer;
 	OpenClController* ocl;
@@ -33,17 +31,16 @@ private:
 
 	void WriteBuffers(std::string symbol);
 	void ReadBuffers(OrderBook* book);
-	ITrader* matchTCLtoTrader(TraderCL tcl, TraderType type);
+	Trader* matchTCLtoTrader(TraderCL tcl, TraderType type);
 
-	Logger* _logger;
 	static const std::string logName;
 
 public:
 	TraderManager(bool profiling = false);
 	~TraderManager();
 
-	void addTrader(ITrader* trader);
-	void removeTrader(ITrader* trade);
+	void addTrader(Trader* trader);
+	void removeTrader(Trader* trade);
 	void Init();
 
 	void print(std::string symbol);
@@ -53,4 +50,21 @@ public:
 	void process(OrderBook* book);
 	double getProcessTime();
 	bool checkReady();
+
+	size_t SizeOf();
+
+	std::vector<Trader*> GetAllTraders();
+	double GetMinRTProfit();
+	double GetAveRTProfit();
+	double GetMaxRTProfit();
+	double GetMinLRTProfit();
+	double GetAveLRTProfit();
+	double GetMaxLRTProfit();
+	double GetMinPTProfit();
+	double GetAvePTProfit();
+	double GetMaxPTProfit();
+	double GetMinMTProfit();
+	double GetAveMTProfit();
+	double GetMaxMTProfit();
+	double GetAveProfit();
 };

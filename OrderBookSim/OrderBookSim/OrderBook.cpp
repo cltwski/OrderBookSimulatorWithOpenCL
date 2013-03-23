@@ -5,7 +5,6 @@ const std::string OrderBook::logName = "OrderBook";
 
 OrderBook::OrderBook(Stock* stock, TraderManager* traderManager, bool perfAnalytics)
 {
-	_logger = Logger::GetInstance(LOGLEVEL);
 	_threshold = 0.01;
 	_stock = stock;
 	_ruleManager = new RuleManager();
@@ -18,26 +17,20 @@ OrderBook::OrderBook(Stock* stock, TraderManager* traderManager, bool perfAnalyt
 	if (_performanceAnalytics)
 	{
 		_timer = new WallTimer();
-		_matchTime = new double(0);
-		_traderProcTime = new double(0);
-		_aveMatchTime = 0;
-		_aveTraderProcTime = 0;
-		_maxMatchTime = 0;
-		_maxTraderProcTime = 0;
-		_aveOclProcTime = 0;
-		_maxOclProcTime = 0;
-		std::string temp = "Time,Price,NumberBuyOrder,NumberSellOrder,NumberTrades,MatchTime,AveMatchTime,MaxMatchTime,OclProcTime,AveOclProcTime,MaxOclProcTime,TraderProcTime,AveTraderProcTime,MaxTraderProcTime";
-		std::cout << temp << std::endl;
-		_logger->Data(temp);
+		_matchTime = 0;
+		_traderProcTime = 0;
+		std::string temp = "Time,Price,Bid,Call,Spread,BuyOrderCount,SellOrderCount,TradesCount,MatchTime,OclProcTime,TraderProcTime";
+		//std::cout << temp << std::endl;
+		Logger::GetInstance()->Data(temp);
 	}
 	else
 	{
 		_timer = NULL;
 		_matchTime = NULL;
 		_traderProcTime = NULL;
-		std::string temp = "Time,Price,NumberBuyOrder,NumberSellOrder,NumberTrades";
-		std::cout << temp << std::endl;
-		_logger->Data(temp);
+		std::string temp = "Time,Price,Bid,Call,Spread,NumberBuyOrder,NumberSellOrder,NumberTrades,MinPrice,AvePrice,MaxPrice";
+		//std::cout << temp << std::endl;
+		Logger::GetInstance()->Data(temp);
 	}
 	_buyMarketOrders = 0;
 	_buyLimitOrders = 0;
@@ -50,17 +43,19 @@ OrderBook::OrderBook(Stock* stock, TraderManager* traderManager, bool perfAnalyt
 	{
 		_traderManager->Init();
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::cerr << exception.what();
-		_logger->Error(logName, exception.what());
+		std::stringstream temp1; temp1 << "Failed in OrderBook():_traderManager->Init() - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		std::cerr << temp << std::endl;
+		std::getchar();
 		exit(-1);
 	}
 }
 
 OrderBook::OrderBook(Stock* stock, TraderManager* traderManager, double openPrice, bool perfAnalytics)
 {
-	_logger = Logger::GetInstance(LOGLEVEL);
 	_threshold = 0.01;
 	_stock = stock;
 	_ruleManager = new RuleManager();
@@ -73,26 +68,20 @@ OrderBook::OrderBook(Stock* stock, TraderManager* traderManager, double openPric
 	if (_performanceAnalytics)
 	{
 		_timer = new WallTimer();
-		_matchTime = new double(0);
-		_traderProcTime = new double(0);
-		_aveMatchTime = 0;
-		_aveTraderProcTime = 0;
-		_maxMatchTime = 0;
-		_maxTraderProcTime = 0;
-		_aveOclProcTime = 0;
-		_maxOclProcTime = 0;
-		std::string temp = "Time,Price,NumberBuyOrder,NumberSellOrder,NumberTrades,MatchTime,AveMatchTime,MaxMatchTime,OclProcTime,AveOclProcTime,MaxOclProcTime,TotalProcTime,AveTotalProcTime,MaxTotalProcTime";
-		std::cout << temp << std::endl;
-		_logger->Data(temp);
+		_matchTime = 0;
+		_traderProcTime = 0;
+		std::string temp = "Time,Price,Bid,Call,Spread,BuyOrderCount,SellOrderCount,TradesCount,MatchTime,OclProcTime,TraderProcTime";
+		//std::cout << temp << std::endl;
+		Logger::GetInstance()->Data(temp);
 	}
 	else
 	{
 		_timer = NULL;
 		_matchTime = NULL;
 		_traderProcTime = NULL;
-		std::string temp = "Time,Price,NumberBuyOrder,NumberSellOrder,NumberTrades";
-		std::cout << temp << std::endl;
-		_logger->Data(temp);
+		std::string temp = "Time,Price,Bid,Call,Spread,NumberBuyOrder,NumberSellOrder,NumberTrades";
+		//std::cout << temp << std::endl;
+		Logger::GetInstance()->Data(temp);
 	}
 	_buyMarketOrders = 0;
 	_buyLimitOrders = 0;
@@ -105,11 +94,12 @@ OrderBook::OrderBook(Stock* stock, TraderManager* traderManager, double openPric
 	{
 		_traderManager->Init();
 	}
-	catch (std::exception exception)
+	catch (...)
 	{
-		std::cerr << exception.what();
-		_logger->Error(logName, exception.what());
-		exit(-1);
+		std::stringstream temp1; temp1 << "Failed in OrderBook():_traderManager->Init() - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		throw new std::exception(temp.c_str());
 	}
 }
 
@@ -118,7 +108,7 @@ OrderBook::~OrderBook(void)
 
 Order* OrderBook::getOrderPtr(Order order)
 {
-	_logger->Debug(logName, Utils::Merge("Getting Pointer for order:", order.toString()));
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Getting Pointer for order:", order.toString()));
 	std::list<Order>::iterator it;
 
 	if (order.isBuy())
@@ -127,7 +117,7 @@ Order* OrderBook::getOrderPtr(Order order)
 		{
 			if (it->equals(&order))
 			{
-				_logger->Debug(logName, "DONE");
+				Logger::GetInstance()->Debug(logName, "DONE");
 				return &*it;
 			}
 		}
@@ -138,19 +128,19 @@ Order* OrderBook::getOrderPtr(Order order)
 		{
 			if (it->equals(&order))
 			{
-				_logger->Debug(logName, "DONE");
+				Logger::GetInstance()->Debug(logName, "DONE");
 				return &*it;
 			}
 		}
 	}
 
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 	return NULL;
 }
 
 Order* OrderBook::getOrderPtr(int id)
 {
-	_logger->Debug(logName, Utils::Merge("Getting Pointer for order id:", Utils::ItoS(id)));
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Getting Pointer for order id:", Utils::ItoS(id)));
 	std::list<Order>::iterator it;
 
 	//First search buy orders
@@ -158,7 +148,7 @@ Order* OrderBook::getOrderPtr(int id)
 	{
 		if (it->getOrderNumber() == id)
 		{
-			_logger->Debug(logName, "DONE");
+			Logger::GetInstance()->Debug(logName, "DONE");
 			return &*it;
 		}
 	}
@@ -168,39 +158,69 @@ Order* OrderBook::getOrderPtr(int id)
 	{
 		if (it->getOrderNumber() == id)
 		{
-			_logger->Debug(logName, "DONE");
+			Logger::GetInstance()->Debug(logName, "DONE");
 			return &*it;
 		}
 	}
 
 	//if nothing is found
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 	return NULL;
+}
+
+Order OrderBook::GetOrder(int id)
+{
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Getting Pointer for order id:", Utils::ItoS(id)));
+	std::list<Order>::iterator it;
+
+	//First search buy orders
+	for (it = _buyOrders.begin(); it != _buyOrders.end(); it++)
+	{
+		if (it->getOrderNumber() == id)
+		{
+			Logger::GetInstance()->Debug(logName, "DONE");
+			return *it;
+		}
+	}
+
+	//If not found search sell orders
+	for (it = _sellOrders.begin(); it != _sellOrders.end(); it++)
+	{
+		if (it->getOrderNumber() == id)
+		{
+			Logger::GetInstance()->Debug(logName, "DONE");
+			return *it;
+		}
+	}
+
+	//if nothing is found
+	Logger::GetInstance()->Debug(logName, "DONE");
+	throw new std::exception(Utils::Merge("No order found with id:", Utils::ItoS(id)).c_str());
 }
 
 Trade* OrderBook::getTradePtr(Trade trade)
 {
-	_logger->Debug(logName, Utils::Merge("Getting Pointer for trade:", trade.toString()));
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Getting Pointer for trade:", trade.toString()));
 	std::vector<Trade>::iterator it;
 
 	for (it = _trades.begin(); it != _trades.end(); it++)
 	{
 		if (it->equals(&trade))
 		{
-			_logger->Debug(logName, "DONE");
+			Logger::GetInstance()->Debug(logName, "DONE");
 			return &*it;
 		}
 	}
 
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 	return NULL;
 }
 
 void OrderBook::notifyTraders(Trade* trade)
 {
-	_logger->Debug(logName, "Notifying Traders of trade");
+	Logger::GetInstance()->Debug(logName, "Notifying Traders of trade");
 	_traderManager->notify(trade);
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OrderBook::print()
@@ -260,12 +280,24 @@ void OrderBook::printBrief()
 
 	if (_performanceAnalytics)
 	{
-		char T[512];
+		/*char T[512];
 		sprintf_s(T, "%d,%.2f,%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\t\t", 
 			_time, this->getLastPrice().price, this->getBuyOrders().size(), this->getSellOrders().size(), _trades.size(),
-			(*_matchTime), _aveMatchTime, _maxMatchTime,
-			(*_traderProcTime), _aveTraderProcTime, _maxTraderProcTime,
-			_traderManager->getProcessTime(), _aveOclProcTime, _maxOclProcTime);
+			_matchTime, GetAveMatchTime(), GetMaxMatchTime(),
+			_traderProcTime, GetAveTraderProcTime(), GetMaxTraderProcTime(),
+			_traderManager->getProcessTime(), GetAveOclProcTime(), GetMaxOclProcTime());
+		stream << T << "\r";*/
+		char T[512];
+		sprintf_s(T, "%d,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.3f,%.3f,%.3f",
+			_time, this->getLastPrice().price, this->GetBid(), this->GetCall(), this->GetSpread(),
+			this->getBuyOrders().size(), this->getSellOrders().size(), _trades.size(),
+			_matchTime, _traderProcTime, _traderManager->getProcessTime());
+
+		/*sprintf_s(T, "%d,%.2f,%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\t\t", 
+			_time, this->getLastPrice().price, this->getBuyOrders().size(), this->getSellOrders().size(), _trades.size(),
+			_matchTime, 1.0f, 1.0f,
+			_traderProcTime, 1.0f, 1.0f,
+			_traderManager->getProcessTime(), 1.0f, 1.0f);*/
 		stream << T << "\r";
 	}
 	else
@@ -280,164 +312,176 @@ void OrderBook::printBrief()
 	std::ofstream output;
 }
 
-void OrderBook::registerTrader(ITrader* trader)
+void OrderBook::registerTrader(Trader* trader)
 {
-	_logger->Debug(logName, "Registering Trader");
+	Logger::GetInstance()->Debug(logName, "Registering Trader");
 	_traderManager->addTrader(trader);
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
-void OrderBook::unRegisterTrader(ITrader* trader)
+void OrderBook::unRegisterTrader(Trader* trader)
 {
-	_logger->Debug(logName, "Unregistering Trader");
+	Logger::GetInstance()->Debug(logName, "Unregistering Trader");
 	_traderManager->removeTrader(trader);
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OrderBook::processTraders()
 {
-	_logger->Debug(logName, "Processing Traders");
+	Logger::GetInstance()->Debug(logName, "Processing Traders");
 
 	if (_performanceAnalytics)
 		_timer->Start();
-	_traderManager->process(this);
+	try
+	{
+		_traderManager->process(this);
+	}
+	catch (...)
+	{
+		std::stringstream temp1; temp1 << "Failed in processTraders:_traderManager->process() - " << __FILE__ << " (" << __LINE__ << ")";
+		std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+		Logger::GetInstance()->Error(logName, temp);
+		std::cerr << temp << std::endl;
+		std::getchar();
+		exit(-1);
+	}
 	if (_performanceAnalytics)
-		(*_traderProcTime) = _timer->GetCounter();
+		_traderProcTime = _timer->GetCounter();
 
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OrderBook::addRule(IRule* rule)
 {
-	_logger->Info(logName, Utils::Merge("Adding rule:", rule->ToString()));
+	Logger::GetInstance()->Info(logName, Utils::Merge("Adding rule:", rule->ToString()));
 	_ruleManager->addRule(rule);
 }
 
 void OrderBook::removeRule(IRule* rule)
 {
-	_logger->Info(logName, Utils::Merge("Removing rule:", rule->ToString()));
+	Logger::GetInstance()->Info(logName, Utils::Merge("Removing rule:", rule->ToString()));
 	_ruleManager->removeRule(rule);
 }
 
-void OrderBook::submitOrder(Order* order)
+void OrderBook::submitOrder(Order order)
 {
-	_logger->Debug(logName, Utils::Merge("Submitting order to queue. Order:", order->toString()));
-	queue.enqueue(new OrderRequest(order, true));
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Submitting order to queue. Order:", order.toString()));
+	queue.enqueue(OrderRequest(order, true));
 }
 
 void OrderBook::deSubmitOrder(int orderId)
 {
-	_logger->Debug(logName, Utils::Merge("Submitting cancel request to queue for order id:", Utils::ItoS(orderId)));
-	queue.enqueue(new OrderRequest(getOrderPtr(orderId), false));
+	Logger::GetInstance()->Debug(logName, Utils::Merge("Submitting cancel request to queue for order id:", Utils::ItoS(orderId)));
+	queue.enqueue(OrderRequest(GetOrder(orderId), false));
 }
 
 void OrderBook::addOrder(Order order)
 {
-	_logger->Debug(logName, "Adding order to appropriate order list");
+	Logger::GetInstance()->Debug(logName, "Adding order to appropriate order list");
 	if (order.isBuy())
 	{
 		_buyOrders.push_back(order);
-		_logger->Info(logName, Utils::Merge("Added buy order:", order.toString()));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Added buy order:", order.toString()));
 
-		_logger->Debug(logName, "Sorting Buy orders");
+		Logger::GetInstance()->Debug(logName, "Sorting Buy orders");
 		_buyOrders.sort(Order::compareBuys);
-		_logger->Debug(logName, "DONE");
+		Logger::GetInstance()->Debug(logName, "DONE");
 
 		if (order.isMarket())
 		{
 			_buyMarketOrders++;
-			_logger->Info(logName, Utils::Merge("Number of Buy Market Orders:", Utils::ItoS(_buyMarketOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Buy Market Orders:", Utils::ItoS(_buyMarketOrders)));
 		}
 		else if (order.isLimit())
 		{
 			_buyLimitOrders++;
-			_logger->Info(logName, Utils::Merge("Number of Buy Limit Orders:", Utils::ItoS(_buyLimitOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Buy Limit Orders:", Utils::ItoS(_buyLimitOrders)));
 		}
 
 		_buyVolume += order.getSize();
-		_logger->Info(logName, Utils::Merge("Total Buy Volume on the book:", Utils::ItoS(_buyVolume)));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Total Buy Volume on the book:", Utils::ItoS(_buyVolume)));
 	}
 	else
 	{
 		_sellOrders.push_back(order);
-		_logger->Info(logName, Utils::Merge("Added sell order:", order.toString()));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Added sell order:", order.toString()));
 
-		_logger->Debug(logName, "Sorting Sell orders");
+		Logger::GetInstance()->Debug(logName, "Sorting Sell orders");
 		_sellOrders.sort(Order::compareSells);
-		_logger->Debug(logName, "DONE");
+		Logger::GetInstance()->Debug(logName, "DONE");
 
 		if (order.isMarket())
 		{
 			_sellMarketOrders++;
-			_logger->Info(logName, Utils::Merge("Number of Sell Market Orders:", Utils::ItoS(_sellMarketOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Sell Market Orders:", Utils::ItoS(_sellMarketOrders)));
 		}
 		else if(order.isLimit())
 		{
 			_sellLimitOrders++;
-			_logger->Info(logName, Utils::Merge("Number of Sell Limit Orders:", Utils::ItoS(_sellLimitOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Sell Limit Orders:", Utils::ItoS(_sellLimitOrders)));
 		}
 
 		_sellVolume += order.getSize();
-		_logger->Info(logName, Utils::Merge("Total Sell Volume on the book:", Utils::ItoS(_sellVolume)));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Total Sell Volume on the book:", Utils::ItoS(_sellVolume)));
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OrderBook::removeOrder(Order order)
 {
-	_logger->Debug(logName, "Removing order to appropriate order list");
+	Logger::GetInstance()->Debug(logName, "Removing order to appropriate order list");
 	if (order.isBuy())
 	{
 		_buyOrders.remove(order);
-		_logger->Info(logName, Utils::Merge("Removed buy order:", order.toString()));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Removed buy order:", order.toString()));
 
-		_logger->Debug(logName, "Sorting Buy orders");
+		Logger::GetInstance()->Debug(logName, "Sorting Buy orders");
 		_buyOrders.sort(Order::compareBuys);
-		_logger->Debug(logName, "DONE");
+		Logger::GetInstance()->Debug(logName, "DONE");
 
 		if (order.isMarket())
 		{
 			_buyMarketOrders--;
-			_logger->Info(logName, Utils::Merge("Number of Buy Market Orders:", Utils::ItoS(_buyMarketOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Buy Market Orders:", Utils::ItoS(_buyMarketOrders)));
 		}
 		else if (order.isLimit())
 		{
 			_buyLimitOrders--;
-			_logger->Info(logName, Utils::Merge("Number of Buy Limit Orders:", Utils::ItoS(_buyLimitOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Buy Limit Orders:", Utils::ItoS(_buyLimitOrders)));
 		}
 
 		_buyVolume -= order.getSize();
-		_logger->Info(logName, Utils::Merge("Total Buy Volume on the book:", Utils::ItoS(_buyVolume)));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Total Buy Volume on the book:", Utils::ItoS(_buyVolume)));
 	}
 	else
 	{
 		_sellOrders.remove(order);
-		_logger->Info(logName, Utils::Merge("Removed sell order:", order.toString()));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Removed sell order:", order.toString()));
 
-		_logger->Debug(logName, "Sorting Sell orders");
+		Logger::GetInstance()->Debug(logName, "Sorting Sell orders");
 		_sellOrders.sort(Order::compareSells);
-		_logger->Debug(logName, "DONE");
+		Logger::GetInstance()->Debug(logName, "DONE");
 
 		if (order.isMarket())
 		{
 			_sellMarketOrders--;
-			_logger->Info(logName, Utils::Merge("Number of Sell Market Orders:", Utils::ItoS(_sellMarketOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Sell Market Orders:", Utils::ItoS(_sellMarketOrders)));
 		}
 		else if (order.isLimit())
 		{
 			_sellLimitOrders--;
-			_logger->Info(logName, Utils::Merge("Number of Sell Limit Orders:", Utils::ItoS(_sellLimitOrders)));
+			Logger::GetInstance()->Info(logName, Utils::Merge("Number of Sell Limit Orders:", Utils::ItoS(_sellLimitOrders)));
 		}
 
 		_sellVolume -= order.getSize();
-		_logger->Info(logName, Utils::Merge("Total Sell Volume on the book:", Utils::ItoS(_sellVolume)));
+		Logger::GetInstance()->Info(logName, Utils::Merge("Total Sell Volume on the book:", Utils::ItoS(_sellVolume)));
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OrderBook::updateOrderSize(Order*& order, int size)
 {
-	_logger->Debug(logName, Utils::Merge(Utils::Merge("Updating order size to:", Utils::ItoS(size)), order->toString()));
+	Logger::GetInstance()->Debug(logName, Utils::Merge(Utils::Merge("Updating order size to:", Utils::ItoS(size)), order->toString()));
 	if (size <= 0)
 	{
 		if (order->isBuy())
@@ -448,57 +492,27 @@ void OrderBook::updateOrderSize(Order*& order, int size)
 	}
 	else
 	{
-		/*
-		if (order->isBuy())
-		{
-			std::list<Order>::iterator it;
-
-			for (it = _buyOrders.begin(); it != _buyOrders.end(); it++)
-			{
-				if (it->equals(order))
-				{
-					//it->setSize(size);
-					order->setSize(size);
-					break;
-				}
-			}
-		}
-		else
-		{
-			std::list<Order>::iterator it;
-
-			for (it = _sellOrders.begin(); it != _sellOrders.end(); it++)
-			{
-				if (it->equals(order))
-				{
-					//it->setSize(size);
-					order->setSize(size);
-					break;
-				}
-			}
-		}
-		*/
 		if (order->isBuy())
 			_buyVolume -= (order->getSize() - size);
 		else if (order->isSell())
 			_sellVolume -= (order->getSize() - size);
 		order->setSize(size);
 	}
-	_logger->Debug(logName, "DONE");
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 void OrderBook::matchOrders()
 {
-	_logger->Info(logName, "Matching Orders");
+	Logger::GetInstance()->Debug(logName, "Matching Orders");
 
 	if (_performanceAnalytics)
 		_timer->Start();
 	if (!queue.isEmpty())
 	{
-		OrderRequest request = (*queue.dequeue());
-		_logger->Info(logName, Utils::Merge("Dequeued request:", request.ToString()));
+		OrderRequest request = queue.dequeue();
+		Logger::GetInstance()->Info(logName, Utils::Merge("Dequeued request:", request.ToString()));
 
-		_logger->Debug(logName, "Processing Request");
+		Logger::GetInstance()->Debug(logName, "Processing Request");
 		if (request.isInsert())
 		{
 			try
@@ -507,11 +521,13 @@ void OrderBook::matchOrders()
 
 				_ruleManager->applyRules(this, getOrderPtr(request.getOrder()));
 			}
-			catch (std::exception exception)
+			catch (...)
 			{
-				std::string temp = Utils::Merge("Failed in MatchOrders", exception.what());
-				_logger->Error(logName, temp);
-				std::cerr << temp;
+				std::stringstream temp1; temp1 << "Failed in matchOrders:addOrder/applyRules - " << __FILE__ << " (" << __LINE__ << ")";
+				std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+				Logger::GetInstance()->Error(logName, temp);
+				std::cerr << temp << std::endl;
+				std::getchar();
 				exit(-1);
 			}
 		}
@@ -524,40 +540,38 @@ void OrderBook::matchOrders()
 			{
 				_ruleManager->applyRules(this, &tempOrder);
 			}
-			catch (std::exception exception)
+			catch (...)
 			{
-				std::string temp = Utils::Merge("Failed in MatchOrders", exception.what());
-				_logger->Error(logName, temp);
-				std::cerr << temp;
+				std::stringstream temp1; temp1 << "Failed in matchOrders:applyRules - " << __FILE__ << " (" << __LINE__ << ")";
+				std::string temp = Utils::MergeException(temp1.str(), Utils::ResurrectException());
+				Logger::GetInstance()->Error(logName, temp);
+				std::cerr << temp << std::endl;
+				std::getchar();
 				exit(-1);
 			}
 		}
 
-		_logger->Debug(logName, "DONE");
+		Logger::GetInstance()->Debug(logName, "DONE");
 	}
-	//TODO verify this is superfluous
-	/*
-	else if (!_buyOrders.empty() && !_sellOrders.empty())
-	{
-		_ruleManager->applyRules(this, &_buyOrders.front());
-	}
-	*/
-
 	if (_performanceAnalytics)
-		(*_matchTime) = _timer->GetCounter();
+		_matchTime = _timer->GetCounter();
 }
 
 void OrderBook::publishTrade(Trade trade)
 {
-	_logger->Info(logName, Utils::Merge("Publishing trade:", trade.toString()));
+	Logger::GetInstance()->Info(logName, Utils::Merge("Publishing trade:", trade.toString()));
 	_stock->setLastPrice(trade.getPrice());
-	_logger->Info(logName, Utils::Merge("Last Trade Price:", Utils::DtoS(_stock->getLastPrice())));
+
+	Logger::GetInstance()->Info(logName, Utils::Merge("Last Trade Price:", Utils::DtoS(_stock->getLastPrice())));
+	Logger::GetInstance()->Trade(trade.toStringCSV());
+	//_tradesCount++;
 	_trades.push_back(trade);
 	Trade* tradePtr = getTradePtr(trade);
 
-	_logger->Debug(logName, "Notifying Traders");
+	Logger::GetInstance()->Debug(logName, "Notifying Traders");
 	this->notifyTraders(tradePtr);
-	_logger->Debug(logName, "DONE");
+	//this->notifyTraders(&trade);
+	Logger::GetInstance()->Debug(logName, "DONE");
 }
 
 RuleManager* OrderBook::getRuleManager()
@@ -596,10 +610,10 @@ void OrderBook::setLastPrice(double price)
 		std::cout << "error";
 
 	_lastPrice = price;
-	_logger->Info(logName, Utils::Merge("Set last Price: $", Utils::DtoS(_lastPrice)));
-	char temp[16];
+	Logger::GetInstance()->Info(logName, Utils::Merge("Set last Price: $", Utils::DtoS(_lastPrice)));
+	/*char temp[16];
 	sprintf_s(temp, "%.2f", price);
-	std::string temp2(temp);
+	std::string temp2(temp);*/
 }
 
 PastPrice OrderBook::getLastPrice()
@@ -629,19 +643,20 @@ std::vector<PastPrice> OrderBook::getLastPricesN(int N)
 
 PastPrice* OrderBook::getLastPricesPArray()
 {
-	PastPrice* pPrices = new PastPrice[_prices.size()-1];
+	/*PastPrice* pPrices = new PastPrice[_prices.size()-1];
 
 	for (int i=0; i < _prices.size(); i++)
 	{
 		pPrices[i].price = _prices[i].price;
 		pPrices[i].time = _prices[i].time;
 	}
-	return pPrices;
+	return pPrices;*/
+	return &_prices[0];
 }
 
 PastPrice* OrderBook::getLastPricesPArrayN(int N)
 {
-	if (N > _prices.size())
+	/*if (N > _prices.size())
 		throw new std::exception("Range is larger than length of past prices data");
 
 	PastPrice* pPrices = new PastPrice[N];
@@ -652,7 +667,8 @@ PastPrice* OrderBook::getLastPricesPArrayN(int N)
 		pPrices[i].time = _prices[i].time;
 	}
 
-	return pPrices; 
+	return pPrices; */
+	return &_prices[0];
 }
 
 void OrderBook::setTime(int time)
@@ -670,28 +686,32 @@ void OrderBook::update()
 	std::stringstream stream;
 	if (_performanceAnalytics)
 	{
-		_aveMatchTime = (*_matchTime)/(_time+1);
-		_maxMatchTime = max((*_matchTime), _maxMatchTime);
-		_aveTraderProcTime = (*_traderProcTime)/(_time+1);
-		_maxTraderProcTime = max((*_traderProcTime), _maxTraderProcTime);
-		_aveOclProcTime = ((_aveOclProcTime*_time) + _traderManager->getProcessTime())/(_time+1);
-		_maxOclProcTime = max(_traderManager->getProcessTime(), _maxOclProcTime);
+		_matchTimes.push_back(_matchTime);
+		_traderProcTimes.push_back(_traderProcTime);
+		_oclProcTimes.push_back(_traderManager->getProcessTime());
+
+		_tradesSize = sizeof(_trades) + sizeof(Trade)*_trades.capacity();
+		_ordersSize = (sizeof(_buyOrders) + sizeof(Order)*_buyOrders.size()) + (sizeof(_sellOrders) + sizeof(Order)*_sellOrders.size());
 
 		char T[512];
-		sprintf_s(T, "%d,%.2f,%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f", 
+		/*sprintf_s(T, "%d,%.2f,%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f", 
 			_time, this->getLastPrice().price, this->getBuyOrders().size(), this->getSellOrders().size(), _trades.size(),
-			(*_matchTime), _aveMatchTime, _maxMatchTime,
-			(*_traderProcTime), _aveTraderProcTime, _maxTraderProcTime,
-			_traderManager->getProcessTime(), _aveOclProcTime, _maxOclProcTime);
+			_matchTime, GetAveMatchTime(), GetMaxMatchTime(),
+			_traderProcTime, GetAveTraderProcTime(), GetMaxTraderProcTime(),
+			_traderManager->getProcessTime(), GetAveOclProcTime(), GetMaxOclProcTime());*/
+		sprintf_s(T, "%d,%.2f,%.2f,%.2f,%.2f,%d,%d,%d,%.3f,%.3f,%.3f",
+			_time, this->getLastPrice().price, this->GetBid(), this->GetCall(), this->GetSpread(),
+			this->getBuyOrders().size(), this->getSellOrders().size(), _trades.size(),
+			_matchTime, _traderProcTime, _traderManager->getProcessTime());
 		stream << T;
-		_logger->Data(stream.str());
+		Logger::GetInstance()->Data(stream.str());
 	}
 	else
 	{
 		char T[128];
 		sprintf_s(T, "%d,%.2f,%d,%d,%d", _time, this->getLastPrice().price, this->getBuyOrders().size(), this->getSellOrders().size(), _trades.size());
 		stream << T;
-		_logger->Data(stream.str());
+		Logger::GetInstance()->Data(stream.str());
 	}
 
 	//if the price has changed store the change and time
@@ -699,14 +719,13 @@ void OrderBook::update()
 	{
 		_prices.push_back(PastPrice(this->getLastPrice().price, _time));
 	}
-	if (_performanceAnalytics)
-	{
-		_aveMatchTime += (*_matchTime);
-		_aveTraderProcTime += (*_traderProcTime);
-	}
+	_allPrices.push_back(this->getLastPrice().price);
+	_spreads.push_back(this->GetSpread());
+	if (_time > 0)
+		_pastReturns.push_back(_allPrices.back() - _allPrices[_allPrices.size()-2]);
 	_time++;
 
-	_logger->SetTime(_time, true);
+	Logger::GetInstance()->SetTime(_time, true);
 	_traderManager->notify(_time);
 }
 
@@ -721,8 +740,6 @@ void OrderBook::enablePerfAnalytics()
 	{
 		_performanceAnalytics = true;
 		_timer = new WallTimer();
-		_matchTime = new double(0);
-		_traderProcTime = new double(0);
 	}
 }
 
@@ -734,14 +751,6 @@ void OrderBook::disablePerfAnalytics()
 		if (_timer != NULL)
 			delete _timer;
 		_timer = NULL;
-
-		if (_matchTime != NULL)
-			delete _matchTime;
-		_matchTime = NULL;
-
-		if (_traderProcTime != NULL)
-			delete _traderProcTime;
-		_traderProcTime = NULL;
 	}
 }
 
@@ -807,5 +816,244 @@ int OrderBook::getSellVolume()
 	}
 
 	return count;
+}
+
+TraderManager* OrderBook::GetTraderManager()
+{
+	return _traderManager;
+}
+
+double OrderBook::GetAveMatchTime()
+{
+	return Utils::Mean(_matchTimes);
+}
+
+double OrderBook::GetMaxMatchTime()
+{
+	return Utils::Max(_matchTimes);
+}
+
+double OrderBook::GetAveTraderProcTime()
+{
+	return Utils::Mean(_traderProcTimes);
+}
+
+double OrderBook::GetMaxTraderProcTime()
+{
+	return Utils::Max(_traderProcTimes);
+}
+
+double OrderBook::GetAveOclProcTime()
+{
+	return Utils::Mean(_oclProcTimes);
+}
+
+double OrderBook::GetMaxOclProcTime()
+{
+	return Utils::Max(_oclProcTimes);
+}
+
+size_t OrderBook::GetBookSize()
+{
+	size_t result = 0;
+	result += sizeof(OrderBook);
+	result += _traderManager->SizeOf();
+	result += sizeof(Trade)*_trades.capacity();
+	result += sizeof(Order)*(_buyOrders.size() + _sellOrders.size());
+	result += _prices.size()*sizeof(PastPrice) + sizeof(std::vector<double>);
+	result += _allPrices.size()*sizeof(double) + sizeof(std::vector<double>);
+	result += _pastReturns.size()*sizeof(double) + sizeof(std::vector<double>);
+	return result;
+}
+
+double OrderBook::GetBid()
+{
+	double bid = -DBL_MAX;
+	bool set = false;
+	for (auto it = _buyOrders.begin(); it != _buyOrders.end(); it++)
+	{
+		if (it->isLimit())
+		{
+			bid = max(bid, it->getPrice());
+			set = true;
+		}
+	}
+
+	if (!set)
+	{
+		bid = this->getLastPrice().price;
+	}
+
+	return bid;
+}
+
+double OrderBook::GetCall()
+{
+	double call = DBL_MAX;
+	bool set = false;
+	for (auto it = _sellOrders.begin(); it != _sellOrders.end(); it++)
+	{
+		if (it->isLimit())
+		{
+			call = min(call, it->getPrice());
+			set = true;
+		}
+	}
+
+	if (!set)
+	{
+		call = this->getLastPrice().price;
+	}
+
+	return call;
+}
+
+double OrderBook::GetSpread()
+{
+	return this->GetCall() - this->GetBid();
+}
+
+double OrderBook::GetMinPrice()
+{
+	return Utils::Min(_allPrices);
+}
+
+double OrderBook::GetAvePrice()
+{
+	return Utils::Mean(_allPrices);
+}
+
+double OrderBook::GetMaxPrice()
+{
+	return Utils::Max(_allPrices);
+}
+
+double OrderBook::GetTradesPerSecond()
+{
+	return _trades.size()/((double)_time/1000);
+}
+
+double OrderBook::GetMinReturns1ms()
+{
+	return Utils::Min(_pastReturns);
+}
+
+double OrderBook::GetAveReturns1ms()
+{
+	return Utils::Mean(_pastReturns);
+}
+
+double OrderBook::GetMaxReturns1ms()
+{
+	return Utils::Max(_pastReturns);
+}
+
+double OrderBook::GetMinReturns1s()
+{
+	std::vector<double> tempReturns;
+	for (int i=1000; i < _allPrices.size(); i++)
+		tempReturns.push_back(_allPrices[i]-_allPrices[i-1000]);
+	return Utils::Min(tempReturns);
+}
+
+double OrderBook::GetAveReturns1s()
+{
+	std::vector<double> tempReturns;
+	for (int i=1000; i < _allPrices.size(); i++)
+		tempReturns.push_back(_allPrices[i]-_allPrices[i-1000]);
+	return Utils::Mean(tempReturns);
+}
+
+double OrderBook::GetMaxReturns1s()
+{
+	std::vector<double> tempReturns;
+	for (int i=1000; i < _allPrices.size(); i++)
+		tempReturns.push_back(_allPrices[i]-_allPrices[i-1000]);
+	return Utils::Max(tempReturns);
+}
+
+double OrderBook::GetReturn1m()
+{
+	return _allPrices[59999] - _openPrice;
+}
+
+double OrderBook::GetMinRTProfit()
+{
+	return _traderManager->GetMinRTProfit();
+}
+
+double OrderBook::GetAveRTProfit()
+{
+	return _traderManager->GetAveRTProfit();
+}
+
+double OrderBook::GetMaxRTProfit()
+{
+	return _traderManager->GetMaxRTProfit();
+}
+
+double OrderBook::GetMinLRTProfit()
+{
+	return _traderManager->GetMinLRTProfit();
+}
+
+double OrderBook::GetAveLRTProfit()
+{
+	return _traderManager->GetAveLRTProfit();
+}
+
+double OrderBook::GetMaxLRTProfit()
+{
+	return _traderManager->GetMaxLRTProfit();
+}
+
+double OrderBook::GetMinPTProfit()
+{
+	return _traderManager->GetMinPTProfit();
+}
+
+double OrderBook::GetAvePTProfit()
+{
+	return _traderManager->GetAvePTProfit();
+}
+
+double OrderBook::GetMaxPTProfit()
+{
+	return _traderManager->GetMaxPTProfit();
+}
+
+double OrderBook::GetMinMTProfit()
+{
+	return _traderManager->GetMinMTProfit();
+}
+
+double OrderBook::GetAveMTProfit()
+{
+	return _traderManager->GetAveMTProfit();
+}
+
+double OrderBook::GetMaxMTProfit()
+{
+	return _traderManager->GetMaxMTProfit();
+}
+
+double OrderBook::GetAveProfit()
+{
+	return _traderManager->GetAveProfit();
+}
+
+double OrderBook::GetVolatilityPerMin()
+{
+	std::vector<double> temp;
+	temp.resize(_allPrices.size());
+	tbb::parallel_for(tbb::blocked_range<int>(1, _allPrices.size()-1), TBBlog(_allPrices, temp));
+	double vol = Utils::Stdev(temp);
+	vol *= std::sqrt(60000.0f);
+	return vol;
+}
+
+double OrderBook::GetAveSpread()
+{
+	return Utils::Mean(_spreads);
 }
 

@@ -50,12 +50,32 @@ std::string Order::toString()
 	return str;
 }
 
+std::string Order::toStringHeaderCSV()
+{
+	return "Price,Volume,Type,Market(1)/Limit(0),ParticipantId,Stock,Time,OrderId";
+}
+
+std::string Order::toStringCSV()
+{
+	char str[128];
+	sprintf_s(str, "$%.2f,%d,%s,%d,%d,%s,%d,%d", _price, _size, OrderTypeToString(_type), _isMarket, _participant, _stock->toString().c_str(), _time, _orderNumber);
+	return std::string(str);
+}
+
 const char* Order::OrderTypeToString(OrderType type)
 {
 	if (type == BUY)
 		return "BUY";
 	else
 		return "SELL";
+}
+
+OrderType Order::StringToOrderType(std::string text)
+{
+	if (text == "BUY")
+		return OrderType::BUY;
+	else
+		return OrderType::SELL;
 }
 
 bool Order::equals(Order* order)

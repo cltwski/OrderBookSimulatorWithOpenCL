@@ -20,9 +20,9 @@ Logger::Logger(int level)
 
 	char directory[64];
 	char name[64];
-	sprintf_s(directory, "Outputs\\Log-%d\\", _t);
+	sprintf_s(directory, "C:\\Outputs\\Log-%d\\", _t);
 	_directory = std::string(directory);
-	std::wstring ws = s2ws(_directory);
+	std::wstring ws = Utils::s2ws(_directory);
 	CreateDirectory(ws.c_str(), NULL);
 
 	sprintf_s(name, "Log%d.html", _fileCount);
@@ -37,16 +37,26 @@ Logger::Logger(int level)
 	_data.open(_directory + "Data.csv", std::ios_base::app);
 
 	_overall.open(_directory + "Overall.csv", std::ios_base::app);
+
+	_trades.open(_directory + "Trades.csv", std::ios_base::app);
+	_trades << Trade::toStringHeaderCSV() << std::endl;
 }
 
 Logger::~Logger()
 {
-	_log << "<\body><\html>";
-	_fullLog << "<\body><\html>";
-	_log.close();
-	_fullLog.close();
-	_data.close();
-	_overall.close();
+	if (_instanceFlag)
+	{
+		_log << "<\\body><\\html>";
+		_fullLog << "<\\body><\\html>";
+		_log.close();
+		_fullLog.close();
+		_data.close();
+		_overall.close();
+		_trades.close();
+		_instanceFlag = false;
+		delete _instance;
+		_instance = NULL;
+	}
 }
 
 Logger* Logger::GetInstance(int level)
@@ -73,23 +83,11 @@ int Logger::GetLevel()
 	return _level;
 }
 
-std::wstring s2ws(const std::string& s)
-{
-	int len;
-	int slength = (int)s.length() + 1;
-	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
-	wchar_t* buf = new wchar_t[len];
-	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
-	std::wstring r(buf);
-	delete[] buf;
-	return r;
-}
-
 void Logger::SetTime(int time, bool refresh)
 {
 	if (_lineCount > MAXLINECOUNT)
 	{
-		_log << "<\body><\html>";
+		_log << "<\\body><\\html>";
 		_log.close();
 		_lineCount = 0;
 		_fileCount++;
@@ -175,4 +173,14 @@ void Logger::Data(std::string text)
 void Logger::Overall(std::string text)
 {
 	_overall << text << std::endl;
+}
+
+void Logger::Trade(std::string text)
+{
+	_trades << text << std::endl;
+}
+
+std::string Logger::GetDirectory()
+{
+	return _directory;
 }

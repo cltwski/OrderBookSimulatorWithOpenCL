@@ -23,6 +23,8 @@ public:
 	~Trade(void);
 
 	std::string toString();
+	std::string toStringCSV();
+	static std::string toStringHeaderCSV();
 	void print();
 
 	bool equals(Trade* trade);
