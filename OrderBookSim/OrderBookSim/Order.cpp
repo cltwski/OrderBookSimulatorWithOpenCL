@@ -58,7 +58,7 @@ std::string Order::toStringHeaderCSV()
 std::string Order::toStringCSV()
 {
 	char str[128];
-	sprintf_s(str, "$%.2f,%d,%s,%d,%d,%s,%d,%d", _price, _size, OrderTypeToString(_type), _isMarket, _participant, _stock->toString().c_str(), _time, _orderNumber);
+	sprintf_s(str, "%.2f,%d,%s,%d,%d,%s,%d,%d", _price, _size, OrderTypeToString(_type), _isMarket, _participant, _stock->toString().c_str(), _time, _orderNumber);
 	return std::string(str);
 }
 

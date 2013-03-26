@@ -104,7 +104,13 @@ OrderBook::OrderBook(Stock* stock, TraderManager* traderManager, double openPric
 }
 
 OrderBook::~OrderBook(void)
-{}
+{
+	if (_performanceAnalytics)
+	{
+		delete _timer;
+	}
+	delete _ruleManager;
+}
 
 Order* OrderBook::getOrderPtr(Order order)
 {
@@ -377,6 +383,7 @@ void OrderBook::deSubmitOrder(int orderId)
 
 void OrderBook::addOrder(Order order)
 {
+	Logger::GetInstance()->Order(order.toStringCSV());
 	Logger::GetInstance()->Debug(logName, "Adding order to appropriate order list");
 	if (order.isBuy())
 	{
@@ -484,10 +491,11 @@ void OrderBook::updateOrderSize(Order*& order, int size)
 	Logger::GetInstance()->Debug(logName, Utils::Merge(Utils::Merge("Updating order size to:", Utils::ItoS(size)), order->toString()));
 	if (size <= 0)
 	{
-		if (order->isBuy())
-			_buyOrders.remove(*order);
-		else
-			_sellOrders.remove(*order);
+		this->removeOrder(*order);
+		//if (order->isBuy())
+		//	_buyOrders.remove(*order);
+		//else
+		//	_sellOrders.remove(*order);
 		order = NULL;
 	}
 	else
@@ -651,6 +659,17 @@ PastPrice* OrderBook::getLastPricesPArray()
 		pPrices[i].time = _prices[i].time;
 	}
 	return pPrices;*/
+	/*if (_prices.size() > 4000)
+	{
+		std::vector<PastPrice> temp;
+		for (int i=_prices.size()-4001; i < _prices.size(); i++)
+		{
+			temp.push_back(_prices[i]);
+		}
+		return &temp[0];
+	}
+	else
+	{*/
 	return &_prices[0];
 }
 
@@ -669,6 +688,26 @@ PastPrice* OrderBook::getLastPricesPArrayN(int N)
 
 	return pPrices; */
 	return &_prices[0];
+}
+
+int OrderBook::GetMarketBuyCount()
+{
+	return _buyMarketOrders;
+}
+
+int OrderBook::GetMarketSellCount()
+{
+	return _sellMarketOrders;
+}
+
+int OrderBook::GetLimitBuyCount()
+{
+	return _buyLimitOrders;
+}
+
+int OrderBook::GetLimitSellCount()
+{
+	return _sellLimitOrders;
 }
 
 void OrderBook::setTime(int time)
@@ -717,7 +756,18 @@ void OrderBook::update()
 	//if the price has changed store the change and time
 	if (this->getLastPrice().price != _prices.back().price)
 	{
-		_prices.push_back(PastPrice(this->getLastPrice().price, _time));
+		if (_prices.size() > 4000)
+		{
+			for (int i=0; i < _prices.size()-1; i++)
+			{
+				_prices[i] = _prices[i+1];
+			}
+			_prices[4000] = PastPrice(this->getLastPrice().price, _time);
+		}
+		else
+		{
+			_prices.push_back(PastPrice(this->getLastPrice().price, _time));
+		}
 	}
 	_allPrices.push_back(this->getLastPrice().price);
 	_spreads.push_back(this->GetSpread());
@@ -804,6 +854,7 @@ int OrderBook::getBuyVolume()
 	}
 
 	return count;
+	//return _buyVolume;
 }
 
 int OrderBook::getSellVolume()
@@ -816,6 +867,7 @@ int OrderBook::getSellVolume()
 	}
 
 	return count;
+	//return _sellVolume;
 }
 
 TraderManager* OrderBook::GetTraderManager()
@@ -1055,5 +1107,20 @@ double OrderBook::GetVolatilityPerMin()
 double OrderBook::GetAveSpread()
 {
 	return Utils::Mean(_spreads);
+}
+
+int OrderBook::GetMinTraderProcessT()
+{
+	return _traderManager->GetMinTraderProcessT();
+}
+
+int OrderBook::GetAveTraderProcessT()
+{
+	return _traderManager->GetAveTraderProcessT();
+}
+
+int OrderBook::GetMaxTraderProcessT()
+{
+	return _traderManager->GetMaxTraderProcessT();
 }
 

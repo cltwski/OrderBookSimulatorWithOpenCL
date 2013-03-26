@@ -21,7 +21,7 @@ Trader::Trader()
 	dir1 << Logger::GetInstance()->GetDirectory() << "Traders\\";
 	std::wstring ws1 = Utils::s2ws(dir1.str());
 	CreateDirectory(ws1.c_str(), NULL);
-	dir1 << "Trader" << _id << "\\";
+	dir1 << "Trader" << _id << "-" << _processT << "\\";
 	ws1 = Utils::s2ws(dir1.str());
 	CreateDirectory(ws1.c_str(), NULL);
 	_directory = dir1.str();
@@ -54,7 +54,7 @@ Trader::Trader(Trader& trader)
 	dir1 << Logger::GetInstance()->GetDirectory() << "Traders\\";
 	std::wstring ws1 = Utils::s2ws(dir1.str());
 	CreateDirectory(ws1.c_str(), NULL);
-	dir1 << "Trader" << _id << "\\";
+	dir1 << "Trader" << _id << "-" << _processT << "\\";
 	ws1 = Utils::s2ws(dir1.str());
 	CreateDirectory(ws1.c_str(), NULL);
 	_directory = dir1.str();
@@ -89,7 +89,7 @@ Trader::Trader(Stock* stock, int volume, double cash, int processTime, TraderTyp
 	dir1 << Logger::GetInstance()->GetDirectory() << "Traders\\";
 	std::wstring ws1 = Utils::s2ws(dir1.str());
 	CreateDirectory(ws1.c_str(), NULL);
-	dir1 << "Trader" << _id << "\\";
+	dir1 << "Trader" << _id << "-" << _processT << "\\";
 	ws1 = Utils::s2ws(dir1.str());
 	CreateDirectory(ws1.c_str(), NULL);
 	_directory = dir1.str();
@@ -102,9 +102,9 @@ Trader::Trader(Stock* stock, int volume, double cash, int processTime, TraderTyp
 
 Trader::~Trader()
 {
-  _trades.close();
-  _completedOrders.close();
-}
+	_trades.close();
+	_completedOrders.close();
+}	
 
 void Trader::update(int time)
 {

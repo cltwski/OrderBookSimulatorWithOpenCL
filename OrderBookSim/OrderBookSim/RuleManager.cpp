@@ -7,7 +7,12 @@ RuleManager::RuleManager(void)
 {}
 
 RuleManager::~RuleManager(void)
-{}
+{
+	for (auto it=_rules.begin(); it != _rules.end(); it++)
+	{
+		delete *it;
+	}
+}
 
 void RuleManager::addRule(IRule* rule)
 {
@@ -39,7 +44,10 @@ void RuleManager::applyRules(OrderBook* orderBook, Order* order)
 			if (trade == NULL)
 				break;
 			else
+			{
 				orderBook->publishTrade((*trade));
+				delete trade;
+			}
 
 			if (order == NULL || order->getSize() == 0)
 				break;			

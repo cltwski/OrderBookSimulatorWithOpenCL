@@ -78,5 +78,8 @@ Trade* MarketLimitRule::processRule(OrderBook*& orderBook, Order*& order)
 	
 	orderBook->setLastPrice(price);
 
+	matchedOrder = NULL;
+	delete matchedOrder;
+
 	return trade;
 }

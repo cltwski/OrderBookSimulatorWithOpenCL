@@ -67,4 +67,7 @@ public:
 	double GetAveMTProfit();
 	double GetMaxMTProfit();
 	double GetAveProfit();
+	int GetMinTraderProcessT();
+	int GetAveTraderProcessT();
+	int GetMaxTraderProcessT();
 };

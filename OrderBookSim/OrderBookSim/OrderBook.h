@@ -108,6 +108,14 @@ public:
 	PastPrice* getLastPricesPArray();
 	PastPrice* getLastPricesPArrayN(int N);
 
+	int GetMarketBuyCount();
+	int GetMarketSellCount();
+	int GetLimitBuyCount();
+	int GetLimitSellCount();
+
+	int GetBuyVolume();
+	int GetSellVolume();
+
 	void setTime(int time);
 	int getTime();
 	void update();
@@ -166,5 +174,8 @@ public:
 	double GetAveProfit();
 	double GetVolatilityPerMin();
 	double GetAveSpread();
+	int GetMinTraderProcessT();
+	int GetAveTraderProcessT();
+	int GetMaxTraderProcessT();
 };
 

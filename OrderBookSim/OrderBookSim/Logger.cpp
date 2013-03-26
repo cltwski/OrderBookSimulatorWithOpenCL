@@ -17,6 +17,7 @@ Logger::Logger(int level)
 	_level = level;
 	_time = 0;
 	_t = time(0);
+	_run = 1;
 
 	char directory[64];
 	char name[64];
@@ -24,6 +25,12 @@ Logger::Logger(int level)
 	_directory = std::string(directory);
 	std::wstring ws = Utils::s2ws(_directory);
 	CreateDirectory(ws.c_str(), NULL);
+
+	char directory2[64];
+	sprintf_s(directory, "%sLog-%d\\", _directory.c_str(), _run);
+	_directory = std::string(directory);
+	std::wstring ws1 = Utils::s2ws(_directory);
+	CreateDirectory(ws1.c_str(), NULL);
 
 	sprintf_s(name, "Log%d.html", _fileCount);
 	_fileName = std::string(name);
@@ -36,7 +43,8 @@ Logger::Logger(int level)
 
 	_data.open(_directory + "Data.csv", std::ios_base::app);
 
-	_overall.open(_directory + "Overall.csv", std::ios_base::app);
+	_orders.open(_directory + "Orders.csv", std::ios_base::app);
+	_orders << "Price,Volume,Type,Market(1)/Limit(0),ParticipantId,Stock,Time,OrderId" << std::endl;
 
 	_trades.open(_directory + "Trades.csv", std::ios_base::app);
 	_trades << Trade::toStringHeaderCSV() << std::endl;
@@ -51,7 +59,7 @@ Logger::~Logger()
 		_log.close();
 		_fullLog.close();
 		_data.close();
-		_overall.close();
+		_orders.close();
 		_trades.close();
 		_instanceFlag = false;
 		delete _instance;
@@ -81,6 +89,42 @@ void Logger::SetLevel(int level)
 int Logger::GetLevel()
 {
 	return _level;
+}
+
+void Logger::NextRun()
+{
+	_run++;
+	_log << "<\\body><\\html>";
+	_fullLog << "<\\body><\\html>";
+	_log.close();
+	_fullLog.close();
+	_data.close();
+	_orders.close();
+	_trades.close();
+
+	char directory[64];
+	char name[64];
+	sprintf_s(directory, "C:\\Outputs\\Log-%d\\Log-%d\\", _t, _run);
+	_directory = std::string(directory);
+	std::wstring ws = Utils::s2ws(_directory);
+	CreateDirectory(ws.c_str(), NULL);
+
+	sprintf_s(name, "Log%d.html", _fileCount);
+	_fileName = std::string(name);
+	_log.open(_directory + _fileName, std::ios_base::app);
+	_fullLog.open(_directory + "Log.html", std::ios_base::app);
+	_log << "<html><body bgcolor=\"#000000\">\n";
+	_fullLog << "<html><body bgcolor=\"#000000\">\n";
+	_lineCount++;
+	_timer.Start();
+
+	_data.open(_directory + "Data.csv", std::ios_base::app);
+
+	_orders.open(_directory + "Orders.csv", std::ios_base::app);
+	_orders << "Price,Volume,Type,Market(1)/Limit(0),ParticipantId,Stock,Time,OrderId" << std::endl;
+
+	_trades.open(_directory + "Trades.csv", std::ios_base::app);
+	_trades << Trade::toStringHeaderCSV() << std::endl;
 }
 
 void Logger::SetTime(int time, bool refresh)
@@ -170,9 +214,9 @@ void Logger::Data(std::string text)
 	_data << text << std::endl;
 }
 
-void Logger::Overall(std::string text)
+void Logger::Order(std::string text)
 {
-	_overall << text << std::endl;
+	_orders << text << std::endl;
 }
 
 void Logger::Trade(std::string text)

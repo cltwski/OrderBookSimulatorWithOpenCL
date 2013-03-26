@@ -50,25 +50,6 @@ Trade* MarketMarketRule::processRule(OrderBook*& orderBook, Order*& order)
 
 	matchedOrder = &orders.front();
 
-	//Fix for when the front of the list is an order from same participant, but there is a suitable order to be matched next in the list
-	/*
-	if (matchedOrder->getParticipant() == order->getParticipant())
-	{
-		std::list<Order>::iterator it = orders.begin();
-		it++;
-		for (;it != orders.end(); it++)
-		{
-			if (it->getParticipant() != order->getParticipant() && it->isMarket() && order->isMarket())
-			{
-				matchedOrder = &*it;
-				break;
-			}
-		}
-
-		if (matchedOrder->equals(&orders.front()))
-			return NULL;
-	}*/
-
 	auto it = orders.begin();
 	while (matchedOrder->getParticipant() == order->getParticipant())
 	{
@@ -95,6 +76,9 @@ Trade* MarketMarketRule::processRule(OrderBook*& orderBook, Order*& order)
 	orderBook->updateOrderSize(matchedOrder, (matchedOrder->getSize() - size));
 
 	orderBook->setLastPrice(price);
+
+	matchedOrder = NULL;
+	delete matchedOrder;
 
 	return trade;
 }

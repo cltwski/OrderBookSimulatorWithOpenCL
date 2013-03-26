@@ -34,6 +34,7 @@ OpenClController::~OpenClController()
 	if (_instanceFlag)
 	{
 		_instanceFlag = false;
+		delete _device;
 		delete _instance;
 		_instance = NULL;
 	}

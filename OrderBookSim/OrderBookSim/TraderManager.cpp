@@ -15,7 +15,15 @@ TraderManager::TraderManager(bool profiling)
 }
 
 TraderManager::~TraderManager()
-{}
+{
+	for (int i=0; i < _allTraders.size(); i++)
+		delete _allTraders[i];
+	_allTraders.clear();
+	_randomTraders.clear();
+	_largeRandomTraders.clear();
+	_positionTraders.clear();
+	_momentumTraders.clear();
+}
 
 void TraderManager::addTrader(Trader* trader)
 {
@@ -474,6 +482,38 @@ double TraderManager::GetAveProfit()
 	}
 	acc /= _allTraders.size();
 	return acc;
+}
+
+int TraderManager::GetMinTraderProcessT()
+{
+	int val = 9999999999;
+	for (int i=0; i < _allTraders.size(); i++)
+	{
+		int temp = _allTraders[i]->GetProcessT();
+		val = min(val, temp);
+	}
+	return val;
+}
+
+int TraderManager::GetAveTraderProcessT()
+{
+	int acc = 0;
+	for (int i=0; i < _allTraders.size(); i++)
+	{
+		acc += _allTraders[i]->GetProcessT();
+	}
+	acc /= _allTraders.size();
+	return acc;
+}
+
+int TraderManager::GetMaxTraderProcessT()
+{
+	int val = -DBL_MAX;
+	for (int i=0; i < _allTraders.size(); i++)
+	{
+		val = max(val, _allTraders[i]->GetProcessT());
+	}
+	return val;
 }
 
 

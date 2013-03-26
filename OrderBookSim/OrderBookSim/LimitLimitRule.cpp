@@ -53,6 +53,20 @@ Trade* LimitLimitRule::processRule(OrderBook*& orderBook, Order*& order)
 
 	matchedOrder = &orders.front();
 
+	auto it = orders.begin();
+	while (matchedOrder->getParticipant() == order->getParticipant())
+	{
+		if (it->getParticipant() != order->getParticipant() && it->isLimit() && order->isLimit())
+		{
+			matchedOrder = &*it;
+			break;
+		}
+
+		it++;
+		if (it == orders.end())
+			return NULL;
+	}
+
 	if ((order->isSell() && (matchedOrder->getPrice() >= order->getPrice()))
 		|| (order->isBuy() && (matchedOrder->getPrice() <= order->getPrice())))
 	{
@@ -69,6 +83,9 @@ Trade* LimitLimitRule::processRule(OrderBook*& orderBook, Order*& order)
 
 		orderBook->setLastPrice(price);
 	}
+
+	matchedOrder = NULL;
+	delete matchedOrder;
 
 	return trade;
 }

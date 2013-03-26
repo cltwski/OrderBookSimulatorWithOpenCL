@@ -10,12 +10,14 @@
 #include "WallTimer.h"
 #include "Trader.h"
 
+//#include <vld.h>
+
 #define DURATION 60000
-#define NUMRT 32
-#define NUMLRT 32
-#define NUMPT 32
-#define NUMMT 32
-#define RUNS 4
+#define NUMRT 12
+#define NUMLRT 12
+#define NUMPT 12
+#define NUMMT 12
+#define RUNS 1000
 
 class Trader;
 
@@ -26,15 +28,62 @@ double RandomInRange(int low=0, int high=RAND_MAX)
 	return result;
 }
 
-int main()
+int main(int argc, char** argv)
 {
-	Logger::GetInstance()->SetLevel(LOGLEVEL);
-	std::ofstream output;
-	output.open("C:\\Outputs\\newtest1.csv");
-	output << "TimeTaken,SizeInMemory,AveMatchTime,MaxMatchTime,AveOclTime,MaxOclTime,AveTraderTime,MaxTraderTime,MinPrice,AvePrice,MaxPrice,AveSpread,TradesPerSecond,VolatilityPerMin,MinReturn1ms,AveReturn1ms,MaxReturn1ms,MinReturn1s,AveReturn1s,MaxReturn1s,Return1m,MinRTProfit,AveRTProfit,MaxRTProfit,MinLRTProfit,AveLRTProfit,MaxLRTProfit,MinPTProfit,AvePTProfit,MaxPTProfit,MinMTProfit,AveMTProfit,MaxMTProfit,AveProfit" << std::endl;
-	for (int i=0; i < RUNS; i++)
+	int runs = 0;
+	if (argc >= 2)
+		runs = std::atoi(argv[1]);
+	int duration = 60000;
+	if (argc >= 3)
+		duration = std::atoi(argv[2]);
+	std::string name = "noname.csv";
+	if (argc >= 4)
+		name = std::string(argv[3]);
+	int baseCount = 1000;
+	if (argc >= 5)
+		baseCount = std::atoi(argv[4]);
+	int loglevel = 1;
+	if (argc >= 6)
+		loglevel = std::atoi(argv[5]);
+	int numrt = 12;
+	if (argc >= 7)
+		numrt = std::atoi(argv[6]);
+	int numlrt = 12;
+	if (argc >= 8)
+		numlrt = std::atoi(argv[7]);
+	int numpt = 12;
+	if (argc >= 9)
+		numpt = std::atoi(argv[8]);
+	int nummt = 12;
+	if (argc >= 10)
+		nummt = std::atoi(argv[9]);
+	int a = 2000;
+	if (argc >= 12)
+		a = std::atoi(argv[10]);
+	int b = 3000;
+	if (argc >= 12)
+		b = std::atoi(argv[11]);
+	bool waitAtFinish = true;
+	if (argc >= 13)
 	{
-		std::cout << "Run " << (i+1) << " of " << RUNS << std::endl;
+		if (std::atoi(argv[12]) == 1)
+			waitAtFinish = true;
+		else
+			waitAtFinish = false;
+	}
+
+	std::cout << "Initialised with: Runs[" << runs << "] Duration [" << duration << "] Filename[" << name << "] OutputInc[" << baseCount
+			  << "] LogLevel[" << loglevel << "] NumRT[" << numrt << "] NumLRT[" << numlrt << "] NumPT["
+			  << numpt << "] NumMt[" << nummt << "] TimeRange[" << a << "-" << b << "]" 
+			  << " WaitAtFinish[" << waitAtFinish << "]" << std::endl;
+
+	Logger::GetInstance()->SetLevel(loglevel);
+	std::ofstream output;
+	output.open("C:\\Outputs\\" + name);
+	output << "TimeTaken,SizeInMemory,AveMatchTime,MaxMatchTime,AveOclTime,MaxOclTime,AveTraderTime,MaxTraderTime,MinPrice,AvePrice,MaxPrice,AveSpread,TradesPerSecond,VolatilityPerMin,MinReturn1ms,AveReturn1ms,MaxReturn1ms,MinReturn1s,AveReturn1s,MaxReturn1s,Return1m,MinRTProfit,AveRTProfit,MaxRTProfit,MinLRTProfit,AveLRTProfit,MaxLRTProfit,MinPTProfit,AvePTProfit,MaxPTProfit,MinMTProfit,AveMTProfit,MaxMTProfit,AveProfit,MinTraderT,AveTraderT,MaxTraderT" << std::endl;
+	for (int i=0; i < runs; i++)
+	{
+		std::cout << "Run " << (i+1) << " of " << runs << std::endl;
 		srand(time(0));
 		int time = 0;
 		OrderBook* pBook = NULL;
@@ -43,14 +92,14 @@ int main()
 
 		Stock GOOG(0, "GOOG", 100);
 		pTm = new TraderManager(true);
-		for (int j=0; j < NUMRT; j++)
-			pTm->addTrader(new Trader(&GOOG, 1000000, 1000000, std::floor(RandomInRange(2000,3000)), RANDOM_TRADER));
-		for (int j=0; j < NUMLRT; j++)
-			pTm->addTrader(new Trader(&GOOG, 10000000, 10000000, std::floor(RandomInRange(2000,3000)), LARGE_RANDOM_TRADER));
-		for (int j=0; j < NUMPT; j++)
-			pTm->addTrader(new Trader(&GOOG, 100000, 100000, std::floor(RandomInRange(2000,3000)), POSITION_TRADER));
-		for (int j=0; j < NUMMT; j++)
-			pTm->addTrader(new Trader(&GOOG, 10000, 10000, std::floor(RandomInRange(2000,3000)), MOMENTUM_TRADER));
+		for (int j=0; j < numrt; j++)
+			pTm->addTrader(new Trader(&GOOG, 1000000, 1000000, std::floor(RandomInRange(a,b)), RANDOM_TRADER));
+		for (int j=0; j < numlrt; j++)
+			pTm->addTrader(new Trader(&GOOG, 10000000, 10000000, std::floor(RandomInRange(a,b)), LARGE_RANDOM_TRADER));
+		for (int j=0; j < numpt; j++)
+			pTm->addTrader(new Trader(&GOOG, 100000, 100000, std::floor(RandomInRange(a,b)), POSITION_TRADER));
+		for (int j=0; j < nummt; j++)
+			pTm->addTrader(new Trader(&GOOG, 10000, 10000, std::floor(RandomInRange(a,b)), MOMENTUM_TRADER));
 
 		pBook = new OrderBook(&GOOG, pTm, true);
 		pBook->addRule(new MarketMarketRule());
@@ -58,10 +107,10 @@ int main()
 		pBook->addRule(new LimitMarketRule());
 		pBook->addRule(new LimitLimitRule());
 
-		int count = 1000;
+		int count = baseCount;
 		timer.Start();
 
-		while (time < DURATION)
+		while (time < duration)
 		{
 			pBook->matchOrders();
 			pBook->processTraders();
@@ -70,8 +119,8 @@ int main()
 
 			if (count == 1)
 			{
-				std::cout << "\r" << time << "/" << DURATION << " - " << ((((double)time)*100)/DURATION) << "%\t\t\t";
-				count = 1000;
+				std::cout << "\r" << time << "/" << duration << " - " << ((((double)time)*100)/duration) << "%\t\t\t";
+				count = baseCount;
 			}
 			else
 			{
@@ -81,8 +130,8 @@ int main()
 		std::cout << std::endl;
 		double timeTaken = timer.GetCounter();
 		time = 0;
-		std::cout << "Took [" << timeTaken << "ms] to complete a simulation lasting [" << DURATION << "ms]" << std::endl;
-		std::cout << "Performance vs Realtime: " << DURATION/timeTaken << "x" << std::endl;
+		std::cout << "Took [" << timeTaken << "ms] to complete a simulation lasting [" << duration << "ms]" << std::endl;
+		std::cout << "Performance vs Realtime: " << duration/timeTaken << "x" << std::endl;
 		timer1.Start();
 		output << timeTaken << "," << pBook->GetBookSize() << "," << pBook->GetAveMatchTime() << "," << pBook->GetMaxMatchTime() << ","
 			   << pBook->GetAveOclProcTime() << "," << pBook->GetMaxOclProcTime() << "," << pBook->GetAveTraderProcTime() << ","
@@ -94,10 +143,14 @@ int main()
 			   << pBook->GetAveRTProfit() << "," << pBook->GetMaxRTProfit() << "," << pBook->GetMinLRTProfit() << ","
 			   << pBook->GetAveLRTProfit() << "," << pBook->GetMaxLRTProfit() << "," << pBook->GetMinPTProfit() << ","
 			   << pBook->GetAvePTProfit() << "," << pBook->GetMaxPTProfit() << "," << pBook->GetMinMTProfit() << ","
-			   << pBook->GetAveMTProfit() << "," << pBook->GetMaxMTProfit() << "," << pBook->GetAveProfit() << std::endl;
+			   << pBook->GetAveMTProfit() << "," << pBook->GetMaxMTProfit() << "," << pBook->GetAveProfit() << ","
+			   << pBook->GetMinTraderProcessT() << "," << pBook->GetAveTraderProcessT() << "," << pBook->GetMaxTraderProcessT() 
+			   << std::endl;
 		double calcTime = timer1.GetCounter();
 		std::cout << "Took [" << calcTime << "ms] to complete post-simulation calculations" << std::endl;
-		std::cout << "Overall Time: [" << (timeTaken+calcTime) << "ms] - " << DURATION/(timeTaken+calcTime) << "x" << std::endl;
+		std::cout << "Overall Time: [" << (timeTaken+calcTime) << "ms] - " << duration/(timeTaken+calcTime) << "x" << std::endl;
+
+		Logger::GetInstance()->NextRun();
 
 		delete pBook;
 		delete pTm;
@@ -106,95 +159,7 @@ int main()
 	}
 	output.close();
 	std::cout << "COMPLETE" << std::endl;
-	std::getchar();
+	if (waitAtFinish)
+		std::getchar();
 	return 0;
 }
-
-
-
-////
-//
-//#include "stdafx.h"
-//
-//#include <stdlib.h>
-//#include <time.h>
-//#include <random>
-//
-//#include "Tests.h"
-//#include "OrderBook.h"
-//#include "RuleManager.h"
-//#include "TraderManager.h"
-//#include "Rules.h"
-//#include "Order.h"
-//#include "WallTimer.h"
-//#include "Trader.h"
-//
-//#define DURATION 60000
-//#define INCR 1
-//
-//class Trader;
-//
-//int main()
-//{
-//	srand(time(0));
-//
-//	int time = 0;
-//
-//	WallTimer timer;
-//
-//	//Init orderbook and trader manager
-//	Stock stock(0,"GOOG", 100);
-//	TraderManager tm(true);
-//	for (int i=0; i < 32; i++)
-//		tm.addTrader(new Trader(&stock, 10000, 10000, std::floor(((double)rand()*2500/RAND_MAX)+1250), RANDOM_TRADER));
-//	for (int i=0; i < 32; i++)
-//		tm.addTrader(new Trader(&stock, 10000, 10000, std::floor(((double)rand()*5000/RAND_MAX)+2500), LARGE_RANDOM_TRADER));
-//	for (int i=0; i < 32; i++)
-//		tm.addTrader(new Trader(&stock, 1000, 1000, std::floor(((double)rand()*1000/RAND_MAX)+500), POSITION_TRADER));
-//	for (int i=0; i < 32; i++)
-//		tm.addTrader(new Trader(&stock, 20000, 2000, std::floor(((double)rand()*2000/RAND_MAX)+1000), MOMENTUM_TRADER));
-//	OrderBook book(&stock, &tm, true);
-//
-//	//Order matters
-//	book.addRule(new MarketMarketRule());
-//	book.addRule(new MarketLimitRule());
-//	book.addRule(new LimitMarketRule());
-//	book.addRule(new LimitLimitRule());
-//
-//	timer.Start();
-//
-//	Logger* logger = Logger::GetInstance(LOGLEVEL);
-//
-//	logger->Overall("SimTime,StepDuration");
-//
-//	for (int i=1; i <= INCR; i++)
-//	{
-//		while (time < (DURATION*i))
-//		{	
-//			//Order book matching occurs
-//			WallTimer timer1;
-//			timer1.Start();
-//
-//			book.matchOrders();
-//			book.processTraders();
-//
-//			std::stringstream temp;
-//			temp << book.getTime() << "," << timer1.GetCounter();
-//			logger->Overall(temp.str());
-//
-//			book.update();
-//			time = book.getTime();
-//		}
-//	
-//		double timeTaken = timer.GetCounter();
-//		book.printBrief();
-//		std::cout << "\nTook: " << timeTaken << "ms to complete " << DURATION << "ms" <<std::endl;
-//		std::cout << "Performance vs real time: " << DURATION/timeTaken << "x" << std::endl;
-//	}
-//
-//	std::cout << "COMPLETE" << std::endl;
-//
-//	std::getchar();
-//
-//	return 0;
-//}

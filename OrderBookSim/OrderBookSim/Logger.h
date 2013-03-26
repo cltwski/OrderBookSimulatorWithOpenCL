@@ -25,11 +25,12 @@ private:
 	long _t;
 	int _lineCount;
 	int _fileCount;
+	int _run;
 
 	std::ofstream _log;
 	std::ofstream _fullLog;
 	std::ofstream _data;
-	std::ofstream _overall;
+	std::ofstream _orders;
 	std::ofstream _trades;
 	std::string _directory;
 	std::string _fileName;
@@ -44,6 +45,8 @@ public:
 	void SetLevel(int level);
 	int GetLevel();
 
+	void NextRun();
+
 	void SetTime(int time, bool refresh=false);
 	int GetTime();
 
@@ -54,7 +57,7 @@ public:
 	void Warn(std::string source, std::string text);
 	void Error(std::string source, std::string text);
 	void Data(std::string text);
-	void Overall(std::string text);
+	void Order(std::string text);
 	void Trade(std::string text);
 
 	std::string GetDirectory();
