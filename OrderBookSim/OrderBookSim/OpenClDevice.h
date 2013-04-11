@@ -7,6 +7,7 @@
 #include "OpenClStructs.h"
 #include "Logger.h"
 #include "Utils.h"
+#include "Seed.h"
 
 
 #define __NO_STD_VECTOR

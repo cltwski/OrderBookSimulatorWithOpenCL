@@ -9,6 +9,7 @@
 #include "Order.h"
 #include "WallTimer.h"
 #include "Trader.h"
+#include "Seed.h"
 
 //#include <vld.h>
 
@@ -80,11 +81,13 @@ int main(int argc, char** argv)
 	Logger::GetInstance()->SetLevel(loglevel);
 	std::ofstream output;
 	output.open("C:\\Outputs\\" + name);
-	output << "TimeTaken,SizeInMemory,AveMatchTime,MaxMatchTime,AveOclTime,MaxOclTime,AveTraderTime,MaxTraderTime,MinPrice,AvePrice,MaxPrice,AveSpread,TradesPerSecond,VolatilityPerMin,MinReturn1ms,AveReturn1ms,MaxReturn1ms,MinReturn1s,AveReturn1s,MaxReturn1s,Return1m,MinRTProfit,AveRTProfit,MaxRTProfit,MinLRTProfit,AveLRTProfit,MaxLRTProfit,MinPTProfit,AvePTProfit,MaxPTProfit,MinMTProfit,AveMTProfit,MaxMTProfit,AveProfit,MinTraderT,AveTraderT,MaxTraderT" << std::endl;
+	output << "TimeTaken,SizeInMemory,AveMatchTime,MaxMatchTime,AveOclTime,MaxOclTime,AveTraderTime,MaxTraderTime,MinPrice,AvePrice,MaxPrice,AveSpread,TradesPerSecond,VolatilityPerMin,MinReturn1ms,AveReturn1ms,MaxReturn1ms,MinReturn1s,AveReturn1s,MaxReturn1s,Return1m,MinRTProfit,AveRTProfit,MaxRTProfit,MinLRTProfit,AveLRTProfit,MaxLRTProfit,MinPTProfit,AvePTProfit,MaxPTProfit,MinMTProfit,AveMTProfit,MaxMTProfit,AveProfit,MinTraderT,AveTraderT,MaxTraderT,Seed" << std::endl;
 	for (int i=0; i < runs; i++)
 	{
+		std::cout << name << std::endl;
 		std::cout << "Run " << (i+1) << " of " << runs << std::endl;
-		srand(time(0));
+		Seed::GetInstance()->Update();
+		srand(Seed::GetInstance()->GetSeed());
 		int time = 0;
 		OrderBook* pBook = NULL;
 		TraderManager* pTm = NULL;
@@ -145,7 +148,7 @@ int main(int argc, char** argv)
 			   << pBook->GetAvePTProfit() << "," << pBook->GetMaxPTProfit() << "," << pBook->GetMinMTProfit() << ","
 			   << pBook->GetAveMTProfit() << "," << pBook->GetMaxMTProfit() << "," << pBook->GetAveProfit() << ","
 			   << pBook->GetMinTraderProcessT() << "," << pBook->GetAveTraderProcessT() << "," << pBook->GetMaxTraderProcessT() 
-			   << std::endl;
+			   << "," << Seed::GetInstance()->GetSeed() << std::endl;
 		double calcTime = timer1.GetCounter();
 		std::cout << "Took [" << calcTime << "ms] to complete post-simulation calculations" << std::endl;
 		std::cout << "Overall Time: [" << (timeTaken+calcTime) << "ms] - " << duration/(timeTaken+calcTime) << "x" << std::endl;

@@ -25,6 +25,19 @@ Logger::Logger(int level)
 	_directory = std::string(directory);
 	std::wstring ws = Utils::s2ws(_directory);
 	CreateDirectory(ws.c_str(), NULL);
+	_prices.open(_directory + "Prices.csv", std::ios_base::app);
+	_buyOrders.open(_directory + "BuyOrders.csv", std::ios_base::app);
+	_sellOrders.open(_directory + "SellOrders.csv", std::ios_base::app);
+
+	for (int i=1; i <= 60000; i++)
+	{
+		_prices << i << ",";
+		_sellOrders << i << ",";
+		_buyOrders << i << ",";
+	}
+	_prices << std::endl;
+	_buyOrders << std::endl;
+	_sellOrders << std::endl;
 
 	char directory2[64];
 	sprintf_s(directory, "%sLog-%d\\", _directory.c_str(), _run);
@@ -37,7 +50,7 @@ Logger::Logger(int level)
 	_log.open(_directory + _fileName, std::ios_base::app);
 	_fullLog.open(_directory + "Log.html", std::ios_base::app);
 	_log << "<html><body bgcolor=\"#000000\">\n";
-	_fullLog << "<html><body bgcolor=\"#000000\">\n";
+	//_fullLog << "<html><body bgcolor=\"#000000\">\n";
 	_lineCount++;
 	_timer.Start();
 
@@ -61,6 +74,9 @@ Logger::~Logger()
 		_data.close();
 		_orders.close();
 		_trades.close();
+		_prices.close();
+		_buyOrders.close();
+		_sellOrders.close();
 		_instanceFlag = false;
 		delete _instance;
 		_instance = NULL;
@@ -101,6 +117,9 @@ void Logger::NextRun()
 	_data.close();
 	_orders.close();
 	_trades.close();
+	_prices << std::endl;
+	_buyOrders << std::endl;
+	_sellOrders << std::endl;
 
 	char directory[64];
 	char name[64];
@@ -114,7 +133,7 @@ void Logger::NextRun()
 	_log.open(_directory + _fileName, std::ios_base::app);
 	_fullLog.open(_directory + "Log.html", std::ios_base::app);
 	_log << "<html><body bgcolor=\"#000000\">\n";
-	_fullLog << "<html><body bgcolor=\"#000000\">\n";
+	//_fullLog << "<html><body bgcolor=\"#000000\">\n";
 	_lineCount++;
 	_timer.Start();
 
@@ -165,7 +184,7 @@ void Logger::Info(std::string source, std::string text)
 		buffer << "<font color=" << infoCol << "><i>" << _time << "</i> : " << _timer.GetCounter() << "ms - <b><i>INFO</i></b> - <b>" << source << "</b> : "
 			<< text << "</font><br>\n";
 		_log << buffer.str();
-		_fullLog << buffer.str();
+		//_fullLog << buffer.str();
 		_lineCount++;
 	}
 }
@@ -178,7 +197,7 @@ void Logger::Debug(std::string source, std::string text)
 		buffer << "<font color=" << debugCol << "><i>" << _time << "</i> : " << _timer.GetCounter() << "ms - <b><i>DEBUG</i></b> - <b>" << source << "</b> : "
 			<< text << "</font><br>\n";
 		_log << buffer.str();
-		_fullLog << buffer.str();
+		//_fullLog << buffer.str();
 		_lineCount++;
 	}
 }
@@ -191,7 +210,7 @@ void Logger::Warn(std::string source, std::string text)
 		buffer << "<font color=" << warnCol << "><i>" << _time << "</i> : " << _timer.GetCounter() << "ms - <b><i>WARN</i></b> - <b>" << source << "</b> : "
 			<< text << "</font><br>\n";
 		_log << buffer.str();
-		_fullLog << buffer.str();
+		//_fullLog << buffer.str();
 		_lineCount++;
 	}
 }
@@ -204,7 +223,7 @@ void Logger::Error(std::string source, std::string text)
 		buffer << "<font color=" << errorCol << "><i>" << _time << "</i> : " << _timer.GetCounter() << "ms - <b><i>ERROR</i></b> - <b>" << source << "</b> : "
 			<< text << "</font><br>\n";
 		_log << buffer.str();
-		_fullLog << buffer.str();
+		//_fullLog << buffer.str();
 		_lineCount++;
 	}
 }
@@ -227,4 +246,19 @@ void Logger::Trade(std::string text)
 std::string Logger::GetDirectory()
 {
 	return _directory;
+}
+
+void Logger::Prices(double text)
+{
+	_prices << text << ",";
+}
+
+void Logger::BuyOrders(int text)
+{
+	_buyOrders << text << ",";
+}
+
+void Logger::SellOrders(int text)
+{
+	_sellOrders << text << ",";
 }

@@ -744,6 +744,9 @@ void OrderBook::update()
 			_matchTime, _traderProcTime, _traderManager->getProcessTime());
 		stream << T;
 		Logger::GetInstance()->Data(stream.str());
+		Logger::GetInstance()->Prices(this->getLastPrice().price);
+		Logger::GetInstance()->BuyOrders(this->getBuyOrders().size());
+		Logger::GetInstance()->SellOrders(this->getSellOrders().size());
 	}
 	else
 	{

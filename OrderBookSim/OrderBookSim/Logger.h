@@ -32,6 +32,9 @@ private:
 	std::ofstream _data;
 	std::ofstream _orders;
 	std::ofstream _trades;
+	std::ofstream _prices;
+	std::ofstream _buyOrders;
+	std::ofstream _sellOrders;
 	std::string _directory;
 	std::string _fileName;
 
@@ -59,6 +62,10 @@ public:
 	void Data(std::string text);
 	void Order(std::string text);
 	void Trade(std::string text);
+
+	void Prices(double text);
+	void BuyOrders(int text);
+	void SellOrders(int text);
 
 	std::string GetDirectory();
 };

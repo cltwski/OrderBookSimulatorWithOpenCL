@@ -9,7 +9,7 @@ OpenClDevice::OpenClDevice(cl::Context& context, cl::vector<cl::Device>& devices
 	_devices = devices;
 	_kernelFile = kernelFile;
 	_profiling = profiling;
-	srand(time(0));
+	srand(Seed::GetInstance()->GetSeed());
 }
 
 

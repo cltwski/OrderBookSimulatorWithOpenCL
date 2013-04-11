@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Traders">
-      <UniqueIdentifier>{1547babc-b7c1-4222-8b62-4c1aba5ae127}</UniqueIdentifier>
-    </Filter>
     <Filter Include="OpenCL">
       <UniqueIdentifier>{de6b0430-db52-4a38-847d-7622c388156c}</UniqueIdentifier>
     </Filter>
@@ -87,18 +84,6 @@
     <ClInclude Include="WallTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PositionTrader.h">
-      <Filter>Traders</Filter>
-    </ClInclude>
-    <ClInclude Include="MomentumTrader.h">
-      <Filter>Traders</Filter>
-    </ClInclude>
-    <ClInclude Include="RandomTrader.h">
-      <Filter>Traders</Filter>
-    </ClInclude>
-    <ClInclude Include="LargeRandomTrader.h">
-      <Filter>Traders</Filter>
-    </ClInclude>
     <ClInclude Include="OpenClDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,6 +100,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TBBlog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Seed.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -174,6 +162,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OpenClController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Seed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
